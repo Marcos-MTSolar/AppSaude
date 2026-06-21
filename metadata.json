@@ -1,0 +1,6 @@
+{
+  "name": "Vida Saudável - Marcos & Sandra",
+  "description": "Aplicativo pessoal de saúde e bem-estar para Marcos e Sandra, de uso exclusivo do casal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
