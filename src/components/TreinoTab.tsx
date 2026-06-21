@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { Play, CheckCircle2, Clock, Dumbbell, Shield, ShieldCheck, Zap } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Play, CheckCircle2, Clock, Dumbbell, Shield, ShieldCheck, Zap, ChevronDown, ChevronUp, Calendar } from 'lucide-react';
+import { getWorkoutForDay } from '../data/workouts';
+import { WorkoutRunner } from './WorkoutRunner';
+import { getTheme } from '../utils/theme';
 import { getWorkoutForDay } from '../data/workouts';
 import { WorkoutRunner } from './WorkoutRunner';
 
@@ -37,9 +40,15 @@ function useLocalStorage<T>(key: string, initialValue: T) {
 }
 
 export function TreinoTab({ profileId, planDayTreino, absolutePlanDayTreino, setStartDateTreinoStr, setAbsoluteStartDateTreinoStr }: TreinoTabProps) {
-  const currentWeek = Math.max(1, Math.ceil(absolutePlanDayTreino / 7));
-  const todayWorkout = getWorkoutForDay(profileId, currentWeek);
-  const workoutId = todayWorkout ? `${todayWorkout.id}_w${currentWeek}_d${absolutePlanDayTreino}` : 'none';
+  const t = getTheme(profileId);
+  const [dayOffset, setDayOffset] = useState<0 | 1>(1); // 1 = Amanhã, 0 = Hoje
+
+  const displayPlanDay = absolutePlanDayTreino + dayOffset;
+  const currentWeek = Math.max(1, Math.ceil(displayPlanDay / 7));
+  const targetDayOfWeek = new Date(new Date().getTime() + dayOffset * 86400000).getDay();
+
+  const todayWorkout = getWorkoutForDay(profileId, currentWeek, targetDayOfWeek);
+  const workoutId = todayWorkout ? `${todayWorkout.id}_w${currentWeek}_d${displayPlanDay}` : 'none';
 
   // Mark workout as done for the specific day of plan
   const [doneWorkouts, setDoneWorkouts] = useLocalStorage<Record<string, { done: boolean, duration?: number }>>(`${profileId}_workouts_done`, {});
@@ -48,6 +57,13 @@ export function TreinoTab({ profileId, planDayTreino, absolutePlanDayTreino, set
   const [isRunning, setIsRunning] = useState(false);
   const [showFinished, setShowFinished] = useState(false);
   const [lastDuration, setLastDuration] = useState(0);
+  const [expandedEx, setExpandedEx] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (todayWorkout && todayWorkout.exercises.length > 0) {
+      setExpandedEx(todayWorkout.exercises[0].id);
+    }
+  }, [todayWorkout?.id]);
 
   // Calculate Phase
   let phaseName = '';
@@ -75,7 +91,14 @@ export function TreinoTab({ profileId, planDayTreino, absolutePlanDayTreino, set
   const markAsDone = (durationSeconds?: number) => {
     setDoneWorkouts(prev => ({
       ...prev,
-      [workoutId]: { done: true, duration: durationSeconds }
+      [workoutId]: { 
+        done: true, 
+        duration: durationSeconds || 0,
+        date: new Date().toISOString(),
+        profile: profileId,
+        name: todayWorkout?.title || 'Treino',
+        method: durationSeconds ? 'guided' : 'manual'
+      }
     }));
     if (durationSeconds) {
       setLastDuration(durationSeconds);
@@ -95,12 +118,12 @@ export function TreinoTab({ profileId, planDayTreino, absolutePlanDayTreino, set
 
   if (planDayTreino === null) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center space-y-6 bg-white rounded-3xl shadow-sm border border-slate-100">
-        <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 mb-2">
+      <div className={`flex flex-col items-center justify-center p-12 text-center space-y-6 ${t.surface} rounded-3xl shadow-sm border ${t.surfaceBorder}`}>
+        <div className={`w-24 h-24 ${t.surface2} rounded-full flex items-center justify-center ${t.textMuted} mb-2`}>
           <Dumbbell size={48} strokeWidth={1.5} />
         </div>
-        <h2 className="text-3xl font-black text-slate-800 italic">Treino não iniciado</h2>
-        <p className="text-slate-500 max-w-sm mb-4">
+        <h2 className={`text-3xl font-black ${t.text} italic`}>Treino não iniciado</h2>
+        <p className={`${t.textMuted} max-w-sm mb-4`}>
           Você ainda não começou seus treinos. Toque no botão abaixo quando for realizar o seu primeiro treino do plano!
         </p>
         <button
@@ -109,7 +132,7 @@ export function TreinoTab({ profileId, planDayTreino, absolutePlanDayTreino, set
             setStartDateTreinoStr(now);
             setAbsoluteStartDateTreinoStr(now);
           }}
-          className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 px-10 rounded-2xl shadow-lg shadow-emerald-500/20 transition-all active:scale-95 w-full max-w-xs"
+          className={`${t.primary} ${t.primaryHover} text-white font-bold py-4 px-10 rounded-2xl shadow-lg transition-all active:scale-95 w-full max-w-xs`}
         >
           Comecei os treinos hoje
         </button>
@@ -117,74 +140,110 @@ export function TreinoTab({ profileId, planDayTreino, absolutePlanDayTreino, set
     );
   }
 
+  const DaySelector = () => (
+    <div className="flex bg-slate-100 rounded-xl p-1 mb-4 max-w-xs mx-auto">
+      <button 
+        onClick={() => { setDayOffset(0); setShowFinished(false); setIsRunning(false); }}
+        className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${dayOffset === 0 ? `bg-white shadow-sm ${t.primaryText}` : 'text-slate-500 hover:bg-slate-200'}`}
+      >
+        Hoje
+      </button>
+      <button 
+        onClick={() => { setDayOffset(1); setShowFinished(false); setIsRunning(false); }}
+        className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${dayOffset === 1 ? `bg-white shadow-sm ${t.primaryText}` : 'text-slate-500 hover:bg-slate-200'}`}
+      >
+        Amanhã
+      </button>
+    </div>
+  );
+
   if (!todayWorkout) {
     return (
-      <div className="flex flex-col items-center justify-center p-10 text-center bg-white rounded-3xl border border-slate-100 shadow-sm">
-        <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-400">
-          <CheckCircle2 size={32} />
+      <div className="space-y-4 md:space-y-6 pb-20">
+        <DaySelector />
+        <div className="flex flex-col items-center justify-center p-10 text-center bg-white rounded-3xl border border-slate-100 shadow-sm">
+          <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-400">
+            <CheckCircle2 size={32} />
+          </div>
+          <h3 className="font-bold text-slate-800 text-xl mb-2">Descanso Total</h3>
+          <p className="text-slate-500 font-medium">Aproveite para relaxar e recuperar as energias. O descanso é parte fundamental do processo.</p>
         </div>
-        <h3 className="font-bold text-slate-800 text-xl mb-2">Descanso Total</h3>
-        <p className="text-slate-500 font-medium">Aproveite para relaxar e recuperar as energias. O descanso é parte fundamental do processo.</p>
       </div>
     );
   }
 
   if (showFinished) {
     return (
-      <div className="flex flex-col items-center justify-center p-10 text-center bg-emerald-50 rounded-3xl border border-emerald-200">
-        <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mb-6 text-white shadow-xl shadow-emerald-200">
-          <CheckCircle2 size={40} />
+      <div className="space-y-4 md:space-y-6 pb-20">
+        <DaySelector />
+        <div className={`flex flex-col items-center justify-center p-10 text-center ${t.primarySubtle} rounded-3xl border ${t.primaryBorder}`}>
+          <div className={`w-20 h-20 ${t.primary} rounded-full flex items-center justify-center mb-6 text-white shadow-xl`}>
+            <CheckCircle2 size={40} />
+          </div>
+          <h2 className={`font-black ${t.primaryText} text-3xl mb-2`}>Treino Concluído!</h2>
+          <p className={`${t.primarySubtleText} font-medium text-lg mb-8`}>
+            Você suou por <strong>{formatMinSec(lastDuration)}</strong>. Excelente trabalho!
+          </p>
+          <button 
+            onClick={() => setShowFinished(false)}
+            className={`${t.primary} ${t.primaryHover} text-white font-bold py-3 px-8 rounded-full transition`}
+          >
+            Voltar ao Treino
+          </button>
         </div>
-        <h2 className="font-black text-emerald-800 text-3xl mb-2">Treino Concluído!</h2>
-        <p className="text-emerald-700 font-medium text-lg mb-8">
-          Você suou por <strong>{formatMinSec(lastDuration)}</strong>. Excelente trabalho!
-        </p>
-        <button 
-          onClick={() => setShowFinished(false)}
-          className="bg-emerald-600 text-white font-bold py-3 px-8 rounded-full hover:bg-emerald-700 transition"
-        >
-          Voltar ao Dashboard
-        </button>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 pb-20 relative">
-      
-      {/* Progress Phase Banner */}
-      <div className="flex items-center gap-4 bg-slate-800 text-white p-5 rounded-3xl shadow-md border-b-4 border-emerald-500">
-        <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center">
-          <PhaseIcon size={24} className="text-emerald-400" />
+    <div className="space-y-4 md:space-y-6 pb-20">
+      <DaySelector />
+
+      {/* Resumo Card */}
+      <div className={`rounded-3xl p-5 md:p-6 text-white shadow-lg relative overflow-hidden ${t.primary}`}>
+        <div className="relative z-10">
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="font-bold text-lg md:text-xl flex items-center gap-2 mb-1">
+                <PhaseIcon size={20} />
+                {phaseName}
+              </h3>
+              <p className="text-emerald-50 text-xs md:text-sm opacity-90">{phaseDesc}</p>
+            </div>
+            <div className="text-right">
+              <span className="text-3xl font-black italic tracking-tight">{currentWeek}</span>
+              <span className="block text-[10px] uppercase tracking-widest text-emerald-100">Semana</span>
+            </div>
+          </div>
         </div>
-        <div>
-          <h4 className="font-bold text-sm text-emerald-400 uppercase tracking-wider">{phaseName}</h4>
-          <p className="text-sm text-slate-300 font-medium mt-0.5">{phaseDesc}</p>
+        {/* Background Decorative Element */}
+        <div className="absolute -right-6 -bottom-6 opacity-10">
+            <Calendar size={120} />
         </div>
       </div>
 
       {/* Workout Header */}
-      <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+      <div className={`${t.surface} p-4 md:p-6 rounded-3xl shadow-sm border ${t.surfaceBorder}`}>
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 className="text-2xl font-black text-slate-800">{todayWorkout.title}</h2>
-            <div className="flex items-center gap-2 text-slate-500 mt-2 font-medium">
+            <h2 className={`text-xl md:text-2xl font-black ${t.text}`}>{todayWorkout.title}</h2>
+            <div className={`flex items-center gap-2 ${t.textMuted} mt-2 font-medium`}>
               <Clock size={16} /> {todayWorkout.duration}
             </div>
           </div>
           {isDoneToday && (
-            <div className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold uppercase flex items-center gap-1">
+            <div className={`${t.primarySubtle} ${t.primaryText} px-3 py-1 rounded-full text-xs font-bold uppercase flex items-center gap-1`}>
               <CheckCircle2 size={14} /> Feito
             </div>
           )}
         </div>
-        <p className="text-slate-600 font-medium leading-relaxed">{todayWorkout.description}</p>
+        <p className={`${t.textSecondary} font-medium leading-relaxed text-xs md:text-sm`}>{todayWorkout.description}</p>
         
         {!isDoneToday && !todayWorkout.isRest && todayWorkout.exercises.length > 0 && (
-          <div className="flex gap-3 mt-6">
+          <div className="flex gap-3 mt-4 md:mt-6">
              <button 
                 onClick={() => setIsRunning(true)}
-                className="flex-1 bg-emerald-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-emerald-200 flex items-center justify-center gap-2 hover:bg-emerald-700 transition"
+                className={`flex-1 ${t.primary} text-white font-bold py-3 md:py-4 rounded-2xl shadow-lg flex items-center justify-center gap-2 ${t.primaryHover} transition active:scale-95`}
              >
                 <Play fill="currentColor" size={20} /> Iniciar Treino
              </button>
@@ -194,30 +253,56 @@ export function TreinoTab({ profileId, planDayTreino, absolutePlanDayTreino, set
 
       {/* Exercises List */}
       {!todayWorkout.isRest && todayWorkout.exercises.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="font-bold text-lg text-slate-800 pl-2">Exercícios de Hoje</h3>
-          {todayWorkout.exercises.map((ex, idx) => (
-            <div key={ex.id} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-              <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center font-bold text-slate-500 shrink-0">
-                {idx + 1}
-              </div>
-              <div className="flex-1">
-                <h4 className="font-bold text-slate-800 text-base">{ex.name}</h4>
-                <div className="flex flex-wrap items-center gap-2 mt-1.5">
-                  <span className="text-xs font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded uppercase">
-                    {ex.sets} {ex.type === 'time' ? 'Rounds' : 'Séries'}
-                  </span>
-                  <span className="text-xs font-bold bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded uppercase">
-                    {ex.type === 'time' ? `${ex.workTime}s esforço` : `${ex.reps} reps`}
-                  </span>
-                  <span className="text-xs font-bold bg-blue-50 text-blue-600 px-2 py-0.5 rounded uppercase">
-                    {ex.restTime}s desc
-                  </span>
+        <div className="space-y-3 md:space-y-4">
+          <h3 className={`font-bold text-lg ${t.text} pl-2`}>Exercícios de Hoje</h3>
+          {todayWorkout.exercises.map((ex, idx) => {
+            const isExpanded = expandedEx === ex.id;
+            return (
+              <div 
+                key={ex.id} 
+                className={`${t.surface} p-3 md:p-5 rounded-2xl border ${t.surfaceBorder} shadow-sm transition-all`}
+              >
+                <div 
+                  className="flex items-center gap-3 md:gap-4 cursor-pointer"
+                  onClick={() => setExpandedEx(isExpanded ? null : ex.id)}
+                >
+                  <div className={`w-8 h-8 md:w-10 md:h-10 ${t.surface2} rounded-full flex items-center justify-center font-bold ${t.textMuted} shrink-0 text-sm md:text-base`}>
+                    {idx + 1}
+                  </div>
+                  <div className="flex-1">
+                    <h4 className={`font-bold ${t.text} text-sm md:text-base`}>{ex.name}</h4>
+                    {!isExpanded && (
+                      <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                        <span className={`text-[10px] md:text-xs font-bold ${t.surface2} ${t.textSecondary} px-2 py-0.5 rounded uppercase`}>
+                          {ex.sets} {ex.type === 'time' ? 'Rounds' : 'Séries'}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className={`${t.textMuted} p-1 ${t.surface2} rounded-full`}>
+                    {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                  </div>
                 </div>
-                {ex.note && <p className="text-sm text-slate-500 mt-2 font-medium">{ex.note}</p>}
+
+                {isExpanded && (
+                  <div className={`mt-3 pl-11 md:pl-14 pt-3 border-t ${t.surfaceBorder}`}>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className={`text-[10px] md:text-xs font-bold ${t.surface2} ${t.textSecondary} px-2 py-0.5 rounded uppercase`}>
+                        {ex.sets} {ex.type === 'time' ? 'Rounds' : 'Séries'}
+                      </span>
+                      <span className={`text-[10px] md:text-xs font-bold ${t.primarySubtle} ${t.primaryText} px-2 py-0.5 rounded uppercase`}>
+                        {ex.type === 'time' ? `${ex.workTime}s esforço` : `${ex.reps} reps`}
+                      </span>
+                      <span className="text-[10px] md:text-xs font-bold bg-blue-50 text-blue-600 px-2 py-0.5 rounded uppercase">
+                        {ex.restTime}s desc
+                      </span>
+                    </div>
+                    {ex.note && <p className={`text-xs md:text-sm ${t.textMuted} mt-2 font-medium`}>{ex.note}</p>}
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -226,7 +311,7 @@ export function TreinoTab({ profileId, planDayTreino, absolutePlanDayTreino, set
         <div className="pt-4">
           <button 
             onClick={handleManualComplete}
-            className="w-full bg-slate-100 text-slate-600 font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-slate-200 transition"
+            className={`w-full ${t.surface2} ${t.textSecondary} font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:opacity-80 transition border ${t.surfaceBorder}`}
           >
             <CheckCircle2 size={20} /> Marcar como concluído manualmente
           </button>

@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, SkipForward, X, Check, Timer } from 'lucide-react';
 import { Exercise } from '../data/workouts';
+import { getTheme } from '../utils/theme';
 
 interface WorkoutRunnerProps {
   exercises: Exercise[];
+  profileId?: 'marcos' | 'sandra';
   onComplete: (durationSeconds: number) => void;
   onCancel: () => void;
 }
 
 type RunnerState = 'idle' | 'work' | 'rest' | 'finished';
 
-export function WorkoutRunner({ exercises, onComplete, onCancel }: WorkoutRunnerProps) {
+export function WorkoutRunner({ exercises, profileId = 'marcos', onComplete, onCancel }: WorkoutRunnerProps) {
+  const t = getTheme(profileId);
   const [currentExIdx, setCurrentExIdx] = useState(0);
   const [currentSet, setCurrentSet] = useState(1);
   const [state, setState] = useState<RunnerState>('idle');
@@ -163,9 +166,15 @@ export function WorkoutRunner({ exercises, onComplete, onCancel }: WorkoutRunner
         <div className="flex-1 p-6 flex flex-col items-center justify-center text-center">
           <h2 className="text-2xl font-black text-slate-800 mb-2">{currentEx.name}</h2>
           
-          <div className="text-emerald-600 font-bold mb-8 text-lg bg-emerald-50 px-4 py-1 rounded-full">
-            {isTimeBased ? `Série ${currentSet} de ${currentEx.sets}` : `Série ${currentSet} de ${currentEx.sets} • ${currentEx.reps} reps`}
-          </div>
+          {state === 'finished' ? (
+            <div className={`${t.primarySubtle} ${t.primaryText} font-bold mb-8 text-lg px-4 py-1 rounded-full`}>
+              Treino Concluído!
+            </div>
+          ) : (
+            <div className={`${t.primarySubtle} ${t.primaryText} font-bold mb-8 text-lg px-4 py-1 rounded-full`}>
+              {isTimeBased ? `Série ${currentSet} de ${currentEx.sets}` : `Série ${currentSet} de ${currentEx.sets} • ${currentEx.reps} reps`}
+            </div>
+          )}
 
           {currentEx.note && state !== 'rest' && (
             <p className="text-slate-500 mb-6 text-sm">{currentEx.note}</p>
@@ -181,7 +190,7 @@ export function WorkoutRunner({ exercises, onComplete, onCancel }: WorkoutRunner
                   cy="50" 
                   r="45" 
                   fill="none" 
-                  stroke={state === 'work' ? '#10b981' : '#3b82f6'} 
+                  stroke={state === 'work' ? t.primaryHex : '#3b82f6'} 
                   strokeWidth="8" 
                   strokeLinecap="round"
                   strokeDasharray="283"
@@ -200,7 +209,7 @@ export function WorkoutRunner({ exercises, onComplete, onCancel }: WorkoutRunner
                 </div>
               ) : (
                 <div className="text-center">
-                  <span className={`text-sm font-bold uppercase tracking-widest block mb-1 ${state === 'work' ? 'text-emerald-500' : 'text-blue-500'}`}>
+                  <span className={`text-sm font-bold uppercase tracking-widest block mb-1 ${state === 'work' ? t.primaryText : 'text-blue-500'}`}>
                     {state === 'work' ? 'Treinando' : 'Descanso'}
                   </span>
                   <span className="text-6xl font-black text-slate-800 tracking-tighter">
@@ -220,17 +229,26 @@ export function WorkoutRunner({ exercises, onComplete, onCancel }: WorkoutRunner
                 if (currentEx.restTime > 0) startRest();
                 else advanceSetSequence();
               }}
-              className="w-full bg-emerald-600 text-white font-bold text-lg py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-emerald-700 transition"
+              className={`w-full ${t.primary} text-white font-bold text-lg py-4 rounded-2xl flex items-center justify-center gap-2 ${t.primaryHover} transition`}
             >
               <Check /> Concluí esta série
             </button>
           ) : state === 'idle' && isTimeBased ? (
             <button 
               onClick={startWork}
-              className="w-full bg-emerald-600 text-white font-bold text-lg py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-emerald-700 transition"
+              className={`w-full ${t.primary} text-white font-bold text-lg py-4 rounded-2xl flex items-center justify-center gap-2 ${t.primaryHover} transition`}
             >
               <Play /> Iniciar Round
             </button>
+          ) : state === 'finished' ? (
+            <div className="mt-8 flex justify-center">
+              <button 
+                onClick={() => onComplete(totalSecondsElapsed)}
+                className={`w-full ${t.primary} ${t.primaryHover} text-white font-bold text-lg py-4 rounded-2xl flex items-center justify-center gap-2 transition`}
+              >
+                <Check size={24} strokeWidth={3} /> Finalizar e Salvar
+              </button>
+            </div>
           ) : (
             <div className="flex gap-4">
               <button 

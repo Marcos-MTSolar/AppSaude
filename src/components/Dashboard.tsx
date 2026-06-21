@@ -1,7 +1,9 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import { Home, Utensils, Dumbbell, Activity, FileText, ArrowLeft, MoreVertical, Calendar } from 'lucide-react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useWaterReminders } from '../hooks/useWaterReminders';
 import { calculatePlanDay, formatDateBR } from '../utils/date';
+import { getTheme } from '../utils/theme';
 import InicioTab from './InicioTab';
 import CardapioTab from './CardapioTab';
 import { AcompanhamentoTab } from './AcompanhamentoTab';
@@ -45,10 +47,13 @@ export default function Dashboard({ profile, onLogout }: DashboardProps) {
   
   const [showEditDate, setShowEditDate] = useState(false);
 
+  const { permission, requestPermission, showFallbackBanner, dismissFallbackBanner } = useWaterReminders(profile);
+
   const planDayDieta = calculatePlanDay(startDateDietaStr);
   const planDayTreino = calculatePlanDay(startDateTreinoStr);
   const absolutePlanDayTreino = calculatePlanDay(absoluteStartDateTreinoStr) || planDayTreino || 1;
   const profileName = profile === 'marcos' ? 'Marcos' : 'Sandra';
+  const t = getTheme(profile);
 
   const handleEditDateDieta = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) {
@@ -88,21 +93,21 @@ export default function Dashboard({ profile, onLogout }: DashboardProps) {
             <div className="grid grid-cols-2 gap-4">
               <button 
                 onClick={() => setActiveTab('cardapio')}
-                className="bg-white p-6 rounded-3xl shadow-sm border border-emerald-100 flex flex-col items-center justify-center gap-3 text-slate-600 hover:bg-emerald-50/50 transition-colors active:scale-95"
+                className={`${t.surface} p-6 rounded-3xl shadow-sm border ${t.surfaceBorder} flex flex-col items-center justify-center gap-3 ${t.textSecondary} hover:opacity-80 transition-colors active:scale-95`}
               >
-                <div className="p-3 bg-emerald-50 text-emerald-500 rounded-2xl">
+                <div className={`p-3 ${t.primarySubtle} ${t.primaryText} rounded-2xl`}>
                   <Utensils size={28} />
                 </div>
-                <span className="font-bold text-slate-700">Refeições</span>
+                <span className={`font-bold ${t.text}`}>Refeições</span>
               </button>
               <button 
                 onClick={() => setActiveTab('treino')}
-                className="bg-white p-6 rounded-3xl shadow-sm border border-emerald-100 flex flex-col items-center justify-center gap-3 text-slate-600 hover:bg-emerald-50/50 transition-colors active:scale-95"
+                className={`${t.surface} p-6 rounded-3xl shadow-sm border ${t.surfaceBorder} flex flex-col items-center justify-center gap-3 ${t.textSecondary} hover:opacity-80 transition-colors active:scale-95`}
               >
-                <div className="p-3 bg-emerald-50 text-emerald-500 rounded-2xl">
+                <div className={`p-3 ${t.primarySubtle} ${t.primaryText} rounded-2xl`}>
                   <Dumbbell size={28} />
                 </div>
-                <span className="font-bold text-slate-700">Treino Hoje</span>
+                <span className={`font-bold ${t.text}`}>Treino Hoje</span>
               </button>
             </div>
 
@@ -128,67 +133,83 @@ export default function Dashboard({ profile, onLogout }: DashboardProps) {
   };
 
   return (
-    <div className="h-screen bg-emerald-50 text-slate-900 font-sans flex flex-col overflow-hidden select-none">
+    <div className={`h-screen ${t.pageBg} ${t.text} font-sans flex flex-col overflow-hidden select-none`}>
       
       {/* Sleek Header */}
-      <header className="h-20 bg-white border-b border-emerald-100 flex items-center justify-between px-4 md:px-10 shrink-0 z-20">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white font-bold text-xl">VS</div>
-          <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-emerald-600 to-teal-700 bg-clip-text text-transparent hidden sm:block">
-            Vida Saudável <span className="font-normal text-slate-400">| {profileName}</span>
+      <header className={`h-16 md:h-20 ${t.headerBg} border-b ${t.headerBorder} flex items-center justify-between px-3 md:px-10 shrink-0 z-20`}>
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className={`w-8 h-8 md:w-10 md:h-10 ${t.logoBg} rounded-xl flex items-center justify-center text-white font-bold text-lg md:text-xl`}>VS</div>
+          <h1 className={`text-xl font-bold tracking-tight bg-gradient-to-r ${t.titleFrom} ${t.titleTo} bg-clip-text text-transparent hidden sm:block`}>
+            Vida Saudável <span className={`font-normal ${t.textMuted}`}>| {profileName}</span>
           </h1>
         </div>
         
         <div className="flex items-center gap-2 md:gap-4">
-          <div className="flex items-center gap-2 md:gap-3 bg-emerald-50 px-2 md:px-4 py-1.5 md:py-2 rounded-full border border-emerald-100 relative">
-            <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+          <div className={`flex items-center gap-2 md:gap-3 ${t.profilePillBg} px-2 md:px-4 py-1.5 md:py-2 rounded-full border ${t.profilePillBorder} relative`}>
+            <div className={`w-8 h-8 ${t.profileAvatarBg} rounded-full flex items-center justify-center text-white text-xs font-bold`}>
               {profileName.charAt(0)}
             </div>
-            <span className="text-sm font-medium text-teal-800 hidden md:block">{profileName}</span>
-            <button onClick={() => setShowEditDate(!showEditDate)} className="p-1 text-teal-600 hover:bg-teal-100 rounded-full transition-colors">
+            <span className={`text-sm font-medium ${t.profileNameText} hidden md:block`}>{profileName}</span>
+            <button onClick={() => setShowEditDate(!showEditDate)} className={`p-1 ${t.profileBtnText} ${t.profileBtnHover} rounded-full transition-colors`}>
               <MoreVertical size={18} />
             </button>
             {showEditDate && (
-              <div className="absolute right-0 top-full mt-2 w-64 bg-white border border-gray-100 shadow-lg rounded-xl p-4 z-30 space-y-3">
+              <div className={`absolute right-0 top-full mt-2 w-64 ${t.surface} border ${t.surfaceBorder} shadow-lg rounded-xl p-4 z-30 space-y-3`}>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1 flex items-center gap-1">
+                  <label className={`block text-xs font-medium ${t.textMuted} mb-1 flex items-center gap-1`}>
                     <Calendar size={12}/> Início da Dieta
                   </label>
                   <input 
                     type="date" 
                     onChange={handleEditDateDieta}
                     value={startDateDietaStr ? new Date(startDateDietaStr).toISOString().substring(0, 10) : ''}
-                    className="w-full text-sm p-2 border rounded-md"
+                    className={`w-full text-sm p-2 border ${t.inputBorder} ${t.inputBg} ${t.text} rounded-md`}
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1 flex items-center gap-1">
+                  <label className={`block text-xs font-medium ${t.textMuted} mb-1 flex items-center gap-1`}>
                     <Calendar size={12}/> Início dos Treinos
                   </label>
                   <input 
                     type="date" 
                     onChange={handleEditDateTreino}
                     value={startDateTreinoStr ? new Date(startDateTreinoStr).toISOString().substring(0, 10) : ''}
-                    className="w-full text-sm p-2 border rounded-md"
+                    className={`w-full text-sm p-2 border ${t.inputBorder} ${t.inputBg} ${t.text} rounded-md`}
                   />
                 </div>
               </div>
             )}
           </div>
-          <button onClick={onLogout} className="text-sm text-emerald-600 font-semibold hover:bg-emerald-100 px-3 md:px-4 py-2 rounded-lg transition-colors border border-emerald-200">
+          <button onClick={onLogout} className={`text-sm ${t.switchBtnText} font-semibold ${t.switchBtnHover} px-3 md:px-4 py-2 rounded-lg transition-colors border ${t.switchBtnBorder}`}>
             <span className="hidden sm:inline">Trocar Perfil</span>
             <ArrowLeft size={20} className="sm:hidden" />
           </button>
         </div>
       </header>
 
+      {/* Water Reminder Fallback Banner */}
+      {showFallbackBanner && (
+        <div className="bg-blue-600 text-white p-3 flex items-center justify-between shadow-md z-30 shrink-0">
+          <div className="flex items-center gap-2">
+            <div className="p-2 bg-blue-500 rounded-full">💧</div>
+            <div>
+              <p className="font-bold text-sm">Hora de beber água!</p>
+              <p className="text-xs text-blue-100">Beba um copo de água e registre na tela Início.</p>
+            </div>
+          </div>
+          <button onClick={dismissFallbackBanner} className="p-2 hover:bg-blue-700 rounded-full text-white">
+            <MoreVertical size={16} className="rotate-90" />
+          </button>
+        </div>
+      )}
+
       {/* Main Content Area */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto w-full max-w-5xl mx-auto space-y-6">
+      <main className="flex-1 p-3 md:p-8 overflow-y-auto w-full max-w-5xl mx-auto space-y-4 md:space-y-6">
         {renderContent()}
       </main>
 
       {/* Sleek Bottom Navigation */}
-      <nav className="h-16 md:h-20 bg-white border-t border-emerald-100 flex items-center justify-around px-2 md:px-20 shrink-0 pb-safe z-20">
+      <nav className={`h-14 md:h-20 ${t.navBg} border-t ${t.navBorder} flex items-center justify-around px-2 md:px-20 shrink-0 pb-safe z-20`}>
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -197,7 +218,7 @@ export default function Dashboard({ profile, onLogout }: DashboardProps) {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex flex-col items-center gap-1 transition-colors ${
-                isActive ? 'text-emerald-600' : 'text-slate-400'
+                isActive ? t.navActive : t.navInactive
               }`}
             >
               <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
@@ -207,7 +228,7 @@ export default function Dashboard({ profile, onLogout }: DashboardProps) {
         })}
       </nav>
       
-      <div className="bg-slate-100/50 p-3 text-[10px] text-center text-slate-400 border-t border-slate-200">
+      <div className="bg-slate-100/50 p-2 text-[9px] md:text-[10px] text-center text-slate-400 border-t border-slate-200 hidden md:block">
         Este plano foi elaborado com auxílio de inteligência artificial com base nos dados fornecidos. 
         Não substitui avaliação de médico, nutricionista ou educador físico credenciado. 
         Recomenda-se realizar exames de sangue básicos (glicemia, colesterol, hemograma) antes de iniciar.

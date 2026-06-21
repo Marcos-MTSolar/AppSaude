@@ -117,8 +117,8 @@ const sandraOpcional: WorkoutData = {
   isRest: true
 };
 
-export const getWorkoutForDay = (profile: 'marcos' | 'sandra', week: number): WorkoutData | null => {
-  const dayOfWeek = (new Date()).getDay(); // 0 = Sunday, 1 = Monday, etc.
+export const getWorkoutForDay = (profile: 'marcos' | 'sandra', week: number, overrideDayOfWeek?: number): WorkoutData | null => {
+  const dayOfWeek = overrideDayOfWeek !== undefined ? overrideDayOfWeek : (new Date()).getDay(); // 0 = Sunday, 1 = Monday, etc.
 
   if (profile === 'marcos') {
     switch (dayOfWeek) {

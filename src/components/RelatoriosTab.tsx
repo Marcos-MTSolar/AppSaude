@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ShoppingBag, TrendingDown, DollarSign, CheckCircle2, Circle, FileText, Download } from 'lucide-react';
 import { mealsData } from '../data/meals';
+import { getTheme } from '../utils/theme';
 
 interface RelatoriosTabProps {
   profileId: 'marcos' | 'sandra';
@@ -32,6 +33,7 @@ function useLocalStorage<T>(key: string, initialValue: T) {
 }
 
 export function RelatoriosTab({ profileId, absolutePlanDay }: RelatoriosTabProps) {
+  const t = getTheme(profileId);
   // Determine current week 1-4, maxing at 4, mining at 1
   const currentWeek = Math.max(1, Math.min(4, Math.ceil(absolutePlanDay / 7)));
   
@@ -58,6 +60,8 @@ export function RelatoriosTab({ profileId, absolutePlanDay }: RelatoriosTabProps
     const meals = JSON.parse(window.localStorage.getItem(`${profileId}_meals`) || '{}');
     const workouts = JSON.parse(window.localStorage.getItem(`${profileId}_workouts_done`) || '{}');
     const wgts: {date: string, weight: number}[] = JSON.parse(window.localStorage.getItem(`${profileId}_weights`) || '[]');
+    const waterHistory = JSON.parse(window.localStorage.getItem(`${profileId}_water_history`) || '{}');
+    const waterGoal = Number(window.localStorage.getItem(`${profileId}_water_goal`)) || 2500;
 
     // Week metrics
     const expectedMeals = 7 * 6; // 6 meals per day
@@ -84,6 +88,25 @@ export function RelatoriosTab({ profileId, absolutePlanDay }: RelatoriosTabProps
     const initialW = wgts.length > 0 ? wgts[0].weight : 'N/A';
     const currentW = wgts.length > 0 ? wgts[wgts.length - 1].weight : 'N/A';
 
+    // Water metrics (last 7 days)
+    const now = new Date();
+    let weeklyWaterTotal = 0;
+    let weeklyDaysMet = 0;
+    let weeklyDaysCounted = 0;
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(now);
+      d.setDate(now.getDate() - i);
+      const dateStr = d.toISOString().substring(0, 10);
+      const dayRecords = waterHistory[dateStr];
+      if (dayRecords) {
+        const dayTotal = dayRecords.reduce((acc: number, curr: any) => acc + curr.amount, 0);
+        weeklyWaterTotal += dayTotal;
+        if (dayTotal >= waterGoal) weeklyDaysMet++;
+        weeklyDaysCounted++;
+      }
+    }
+    const weeklyWaterAvg = weeklyDaysCounted ? Math.round(weeklyWaterTotal / weeklyDaysCounted) : 0;
+
     let shoppingStr = 'Nenhuma lista encontrada';
     if (shoppingListObject) {
       shoppingStr = shoppingListObject.itens.map(i => `- ${i.item}: ${i.qtd} | R$ ${i.custo.toFixed(2)}`).join('\n');
@@ -101,6 +124,11 @@ Início dos Treinos: ${startDateTreinoStr.replace(/"/g, '')}
 >> ADESÃO
 - Dieta (Refeições concluídas): ${doneMealCount} de ${expectedMeals} (${dietAdhesion}%)
 - Treinos (Concluídos): ${doneWorkoutCount} de ${plannedW} (${Math.min(100, trainingAdhesion)}%)
+
+>> HIDRATAÇÃO (Últimos 7 dias)
+- Média diária consumida: ${weeklyWaterAvg} ml
+- Meta diária atingida: ${weeklyDaysMet} dia(s)
+- Meta atual: ${waterGoal} ml
 
 >> PESO
 - Peso Inicial: ${initialW} kg
@@ -123,6 +151,8 @@ Não substitui avaliação de médico, nutricionista ou educador físico credenc
     const meals = JSON.parse(window.localStorage.getItem(`${profileId}_meals`) || '{}');
     const workouts = JSON.parse(window.localStorage.getItem(`${profileId}_workouts_done`) || '{}');
     const wgts: {date: string, weight: number}[] = JSON.parse(window.localStorage.getItem(`${profileId}_weights`) || '[]');
+    const waterHistory = JSON.parse(window.localStorage.getItem(`${profileId}_water_history`) || '{}');
+    const waterGoal = Number(window.localStorage.getItem(`${profileId}_water_goal`)) || 2500;
 
     const expectedTotalM = 30 * 6; // approx 6 per day
     const doneMCount = Object.keys(meals).length;
@@ -150,6 +180,25 @@ Não substitui avaliação de médico, nutricionista ou educador físico credenc
       }
     }
 
+    // Water metrics (last 30 days)
+    const now = new Date();
+    let monthlyWaterTotal = 0;
+    let monthlyDaysMet = 0;
+    let monthlyDaysCounted = 0;
+    for (let i = 0; i < 30; i++) {
+      const d = new Date(now);
+      d.setDate(now.getDate() - i);
+      const dateStr = d.toISOString().substring(0, 10);
+      const dayRecords = waterHistory[dateStr];
+      if (dayRecords) {
+        const dayTotal = dayRecords.reduce((acc: number, curr: any) => acc + curr.amount, 0);
+        monthlyWaterTotal += dayTotal;
+        if (dayTotal >= waterGoal) monthlyDaysMet++;
+        monthlyDaysCounted++;
+      }
+    }
+    const monthlyWaterAvg = monthlyDaysCounted ? Math.round(monthlyWaterTotal / monthlyDaysCounted) : 0;
+
     const phase = currentWeek <= 4 ? "Fase 1: Adaptação" : currentWeek <= 8 ? "Fase 2: Progressão" : "Fase 3+";
     const expectedAcha = profileId === 'marcos' ? '-2 a -3kg (Fase 1)' : '-1.5 a -2.5kg (Fase 1)';
 
@@ -165,6 +214,11 @@ Fase Atual: ${phase}
 >> ADESÃO MÉDIA (MÊS)
 - Dieta: ${Math.min(100, dietAdhesion)}%
 - Treinos: ${Math.min(100, trainingAdhesion)}%
+
+>> HIDRATAÇÃO (Últimos 30 dias)
+- Média diária consumida: ${monthlyWaterAvg} ml
+- Meta diária atingida: ${monthlyDaysMet} dia(s)
+- Meta atual: ${waterGoal} ml
 
 >> EVOLUÇÃO DE PESO E MEDIDAS
 - Peso Inicial: ${initialW || 'N/A'} kg
@@ -205,76 +259,76 @@ Não substitui avaliação de médico, nutricionista ou educador físico credenc
   };
 
   const financialSummary = [
-    { semana: 1, total: 370.00, pp: 185.00 },
-    { semana: 2, total: 343.00, pp: 171.50 },
-    { semana: 3, total: 325.00, pp: 162.50 },
-    { semana: 4, total: 313.00, pp: 156.50 },
+    { semana: 1, total: 355.00, pp: 177.50 },
+    { semana: 2, total: 338.00, pp: 169.00 },
+    { semana: 3, total: 324.00, pp: 162.00 },
+    { semana: 4, total: 323.00, pp: 161.50 },
   ];
-  const totalMonth = 1351.00;
-  const totalPerson = 675.50;
+  const totalMonth = 1340.00;
+  const totalPerson = 670.00;
 
   return (
     <div className="space-y-6 pb-20">
       
       {/* Title */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-3 bg-teal-100 rounded-2xl">
-          <ShoppingBag className="text-teal-700" size={28} />
+      <div className="flex items-center gap-3 mb-4 md:mb-6">
+        <div className={`p-3 ${t.primarySubtle} rounded-2xl`}>
+          <ShoppingBag className={t.primaryText} size={24} />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-slate-800">Relatórios & Compras</h2>
-          <p className="text-sm text-slate-500">Lista semanal e resumo financeiro</p>
+          <h2 className={`text-lg md:text-xl font-bold ${t.text}`}>Relatórios & Compras</h2>
+          <p className={`text-xs md:text-sm ${t.textMuted}`}>Lista semanal e resumo financeiro</p>
         </div>
       </div>
 
       {/* EXPORT REPORTS */}
-      <section className="bg-slate-800 text-white rounded-3xl p-6 shadow-sm border border-slate-700">
-        <div className="flex items-center gap-3 mb-6">
-          <FileText className="text-emerald-400" size={28} />
+      <section className={`${t.surface2} ${t.text} rounded-3xl p-4 md:p-6 shadow-sm border ${t.surfaceBorder}`}>
+        <div className="flex items-center gap-3 mb-4 md:mb-6">
+          <FileText className={t.primaryText} size={24} />
           <div>
-            <h3 className="font-bold text-lg">Gerar Relatórios</h3>
-            <p className="text-sm text-slate-300">Exporte seu progresso para acompanhamento</p>
+            <h3 className="font-bold text-base md:text-lg">Gerar Relatórios</h3>
+            <p className={`text-[10px] md:text-xs ${t.textMuted}`}>Exporte seu progresso para acompanhamento</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <button 
             onClick={generateWeeklyReport}
-            className="bg-white/10 hover:bg-white/20 transition-colors rounded-2xl p-4 flex items-center justify-between text-left"
+            className={`bg-white/10 hover:bg-white/20 transition-colors rounded-2xl p-4 flex items-center justify-between text-left ${t.surfaceBorder} border`}
           >
             <div>
-              <p className="font-bold text-emerald-400 mb-1">Relatório Semanal</p>
-              <p className="text-xs text-slate-300">Resumo da semana atual e lista de compras</p>
+              <p className={`font-bold ${t.primaryText} mb-1`}>Relatório Semanal</p>
+              <p className={`text-xs ${t.textSecondary}`}>Resumo da semana atual e lista de compras</p>
             </div>
-            <Download className="text-slate-400" size={20} />
+            <Download className={t.textMuted} size={20} />
           </button>
 
           <button 
             onClick={generateMonthlyReport}
-            className="bg-emerald-600 hover:bg-emerald-500 transition-colors rounded-2xl p-4 flex items-center justify-between text-left shadow-lg border border-emerald-500"
+            className={`${t.primary} ${t.primaryHover} transition-colors rounded-2xl p-4 flex items-center justify-between text-left shadow-lg border ${t.primaryBorder}`}
           >
             <div>
               <p className="font-bold text-white mb-1">Relatório Mensal</p>
-              <p className="text-xs text-emerald-100">Visão geral do mês, adesão e peso</p>
+              <p className={`text-xs text-white/80`}>Visão geral do mês, adesão e peso</p>
             </div>
-            <Download className="text-emerald-200" size={20} />
+            <Download className="text-white/60" size={20} />
           </button>
         </div>
       </section>
 
       {/* SHOPPING LIST (CURRENT WEEK) */}
-      <section className="bg-white rounded-3xl p-6 shadow-sm border border-emerald-100">
-        <div className="flex items-center justify-between mb-6">
+      <section className={`${t.surface} rounded-3xl p-4 md:p-6 shadow-sm border ${t.surfaceBorder}`}>
+        <div className="flex items-center justify-between mb-4 md:mb-6">
           <div className="flex items-center gap-2">
-            <h3 className="font-bold text-lg text-slate-800">Lista da Semana {currentWeek}</h3>
+            <h3 className={`font-bold text-base md:text-lg ${t.text}`}>Lista da Semana {currentWeek}</h3>
             {absolutePlanDay > 0 && absolutePlanDay <= 30 && (
-              <span className="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-700 font-bold rounded-full">Atual</span>
+              <span className={`text-[10px] md:text-xs px-2 py-0.5 ${t.primarySubtle} ${t.primaryText} font-bold rounded-full`}>Atual</span>
             )}
           </div>
           {shoppingListObject && (
             <div className="text-right">
-              <span className="text-xs text-slate-500 uppercase font-bold tracking-wider relative top-1">Total Estimado</span>
-              <p className="text-xl font-bold text-emerald-700">R$ {shoppingListObject.total.toFixed(2).replace('.', ',')}</p>
+              <span className={`text-[10px] md:text-xs ${t.textMuted} uppercase font-bold tracking-wider relative top-1`}>Total Estimado</span>
+              <p className={`text-lg md:text-xl font-bold ${t.primaryText}`}>R$ {shoppingListObject.total.toFixed(2).replace('.', ',')}</p>
             </div>
           )}
         </div>
@@ -289,24 +343,24 @@ Não substitui avaliação de médico, nutricionista ou educador físico credenc
                   onClick={() => handleToggleBought(item.item)}
                   className={`flex items-start gap-3 p-3 rounded-2xl border transition-all cursor-pointer ${
                     bought 
-                      ? 'bg-slate-50 border-slate-200 opacity-60' 
-                      : 'bg-white border-emerald-50 hover:bg-emerald-50'
+                      ? `${t.surface2} ${t.surfaceBorder} opacity-60` 
+                      : `${t.surface} ${t.surfaceBorder} hover:${t.surface2}`
                   }`}
                 >
                   <button className="shrink-0 mt-0.5">
                     {bought ? (
-                      <CheckCircle2 size={22} className="text-emerald-500" />
+                      <CheckCircle2 size={22} className={t.checkOn} />
                     ) : (
-                      <Circle size={22} className="text-slate-300" />
+                      <Circle size={22} className={t.textMuted} />
                     )}
                   </button>
                   <div className="flex-1">
-                    <p className={`font-semibold text-sm ${bought ? 'text-slate-500 line-through' : 'text-slate-700'}`}>
+                    <p className={`font-semibold text-sm ${bought ? `${t.textMuted} line-through` : t.text}`}>
                       {item.item}
                     </p>
-                    <p className="text-xs text-slate-400 mt-0.5">{item.qtd} • {item.onde}</p>
+                    <p className={`text-xs ${t.textSecondary} mt-0.5`}>{item.qtd} • {item.onde}</p>
                   </div>
-                  <div className="font-medium text-sm text-slate-600 shrink-0">
+                  <div className={`font-medium text-sm ${t.textMuted} shrink-0`}>
                     R$ {item.custo.toFixed(2).replace('.', ',')}
                   </div>
                 </div>
@@ -314,75 +368,75 @@ Não substitui avaliação de médico, nutricionista ou educador físico credenc
             })}
           </div>
         ) : (
-          <div className="text-center py-6 text-slate-500 bg-slate-50 rounded-2xl">
+          <div className={`text-center py-6 ${t.textMuted} ${t.surface2} rounded-2xl`}>
             Nenhuma lista de compras encontrada para a semana atual.
           </div>
         )}
       </section>
 
       {/* FINANCIAL SUMMARY */}
-      <section className="bg-white rounded-3xl p-6 shadow-sm border border-emerald-100">
-        <h3 className="flex items-center gap-2 font-bold text-lg text-slate-800 mb-6">
-          <DollarSign className="text-teal-600" size={24} /> Resumo Financeiro (Mês 1)
+      <section className={`${t.surface} rounded-3xl p-4 md:p-6 shadow-sm border ${t.surfaceBorder}`}>
+        <h3 className={`flex items-center gap-2 font-bold text-base md:text-lg ${t.text} mb-4 md:mb-6`}>
+          <DollarSign className={t.primaryText} size={20} /> Resumo Financeiro (Mês 1)
         </h3>
         
-        <div className="overflow-hidden rounded-2xl border border-slate-100 mb-6">
+        <div className={`overflow-x-auto rounded-2xl border ${t.surfaceBorder} mb-4 md:mb-6`}>
           <table className="w-full text-sm text-left">
-            <thead className="bg-slate-50 text-slate-600 uppercase text-xs font-bold">
+            <thead className={`${t.surface2} ${t.textSecondary} uppercase text-xs font-bold`}>
               <tr>
                 <th className="px-4 py-3">Semana</th>
                 <th className="px-4 py-3 text-right">Total (Casal)</th>
                 <th className="px-4 py-3 text-right">Por Pessoa</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody className={`divide-y divide-slate-100 ${t.textSecondary}`}>
               {financialSummary.map((row) => (
-                <tr key={row.semana}>
-                  <td className="px-4 py-3 font-semibold text-slate-800">Semana {row.semana}</td>
+                <tr key={row.semana} className={`hover:${t.surface2}`}>
+                  <td className={`px-4 py-3 font-semibold ${t.text}`}>Semana {row.semana}</td>
                   <td className="px-4 py-3 text-right">R$ {row.total.toFixed(2).replace('.', ',')}</td>
-                  <td className="px-4 py-3 text-right text-slate-500">R$ {row.pp.toFixed(2).replace('.', ',')}</td>
+                  <td className="px-4 py-3 text-right opacity-80">R$ {row.pp.toFixed(2).replace('.', ',')}</td>
                 </tr>
               ))}
             </tbody>
-            <tfoot className="bg-emerald-50 font-bold text-emerald-800">
+            <tfoot className={`${t.primarySubtle} font-bold ${t.primaryText}`}>
               <tr>
                 <td className="px-4 py-3">MÊS COMPLETO</td>
-                <td className="px-4 py-3 text-right text-base text-emerald-700">R$ {totalMonth.toFixed(2).replace('.', ',')}</td>
-                <td className="px-4 py-3 text-right text-emerald-600">R$ {totalPerson.toFixed(2).replace('.', ',')}</td>
+                <td className="px-4 py-3 text-right text-base">R$ {totalMonth.toFixed(2).replace('.', ',')}</td>
+                <td className="px-4 py-3 text-right opacity-90">R$ {totalPerson.toFixed(2).replace('.', ',')}</td>
               </tr>
             </tfoot>
           </table>
         </div>
 
         {/* SAVINGS TIPS */}
-        <div className="bg-teal-50 border border-teal-100 rounded-2xl p-4">
-          <h4 className="flex items-center gap-2 text-sm font-bold text-teal-800 mb-3">
-            <TrendingDown size={18} />
+        <div className={`${t.primarySubtle} border ${t.primaryBorder} rounded-2xl p-3 md:p-4`}>
+          <h4 className={`flex items-center gap-2 text-xs md:text-sm font-bold ${t.primaryText} mb-2 md:mb-3`}>
+            <TrendingDown size={16} />
             Dicas de Economia Inteligente
           </h4>
-          <ul className="space-y-2 text-sm text-teal-700/80">
+          <ul className={`space-y-2 text-[10px] md:text-sm ${t.primarySubtleText}`}>
             <li className="flex gap-2">
-              <span className="text-teal-500">•</span>
+              <span className={t.primaryText}>•</span>
               Compre vegetais e ovos em feiras livres da sua região ou "sacolões", chega a ser 40% mais barato.
             </li>
             <li className="flex gap-2">
-              <span className="text-teal-500">•</span>
+              <span className={t.primaryText}>•</span>
               Proteínas: Compre os 10kg de frango do mês em atacado (Atacadão, Assaí) e congele em porções.
             </li>
             <li className="flex gap-2">
-              <span className="text-teal-500">•</span>
+              <span className={t.primaryText}>•</span>
               A sardinha fresca em Pernambuco tem excelente preço, substitua o atum quando possível.
             </li>
             <li className="flex gap-2">
-              <span className="text-teal-500">•</span>
+              <span className={t.primaryText}>•</span>
               Ovos continuam sendo a proteína com melhor custo-benefício. Se faltar orçamento, aumente eles e reduza a carne.
             </li>
             <li className="flex gap-2">
-              <span className="text-teal-500">•</span>
+              <span className={t.primaryText}>•</span>
               Iogurte Grego: Compre o pote "família" (1kg) em vez dos potes individuais, o preço por grama cai consideravelmente.
             </li>
             <li className="flex gap-2">
-              <span className="text-teal-500">•</span>
+              <span className={t.primaryText}>•</span>
               Substitua castanhas caras (nozes/amêndoas) por castanha de caju que é mais acessível no nordeste, ou pasta de amendoim.
             </li>
           </ul>

@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { HelpCircle, ChefHat, Check, X, MapPin, Star, Building2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { HelpCircle, ChefHat, Check, X, MapPin, Star, Building2, ChevronDown, ChevronUp } from 'lucide-react';
 import { mealsData, substitutions } from '../data/meals';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { getTheme } from '../utils/theme';
 
 interface CardapioTabProps {
   profileId: 'marcos' | 'sandra';
@@ -12,20 +13,33 @@ interface CardapioTabProps {
 export default function CardapioTab({ profileId, planDayDieta, setStartDateDietaStr }: CardapioTabProps) {
   const [showTooltip, setShowTooltip] = useState(false);
   const [checkedMeals, setCheckedMeals] = useLocalStorage<Record<string, boolean>>(`${profileId}_meals_checked`, {});
+  const [expandedMeal, setExpandedMeal] = useState<string | null>(null);
+  const t = getTheme(profileId);
+
+  // Expande a primeira refeição não concluída no dia atual
+  useEffect(() => {
+    if (planDayDieta) {
+      const mealOrderKeys = ['cafe_manha', 'lanche_manha', 'almoco', 'lanche_tarde', 'jantar'];
+      const firstUnchecked = mealOrderKeys.find(key => !checkedMeals[`d${planDayDieta}_${key}`]);
+      if (firstUnchecked) {
+        setExpandedMeal(firstUnchecked);
+      }
+    }
+  }, [planDayDieta]); // Run once when planDayDieta changes
 
   if (planDayDieta === null) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center space-y-6 bg-white rounded-3xl shadow-sm border border-emerald-100">
-        <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500 mb-2">
+      <div className={`flex flex-col items-center justify-center p-12 text-center space-y-6 ${t.surface} rounded-3xl shadow-sm border ${t.surfaceBorder}`}>
+        <div className={`w-24 h-24 ${t.primarySubtle} rounded-full flex items-center justify-center ${t.primaryText} mb-2`}>
           <ChefHat size={48} strokeWidth={1.5} />
         </div>
-        <h2 className="text-3xl font-black text-slate-800 italic">Dieta não iniciada</h2>
-        <p className="text-slate-500 max-w-sm mb-4">
+        <h2 className={`text-3xl font-black ${t.text} italic`}>Dieta não iniciada</h2>
+        <p className={`${t.textMuted} max-w-sm mb-4`}>
           Você ainda não começou a seguir o cardápio. Toque no botão abaixo quando fizer sua primeira refeição do plano!
         </p>
         <button
           onClick={() => setStartDateDietaStr(new Date().toISOString())}
-          className="bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-4 px-10 rounded-2xl shadow-lg shadow-emerald-500/20 transition-all active:scale-95 w-full max-w-xs"
+          className={`${t.primary} ${t.primaryHover} text-white font-bold py-4 px-10 rounded-2xl shadow-lg transition-all active:scale-95 w-full max-w-xs`}
         >
           Comecei a dieta hoje
         </button>
@@ -57,8 +71,7 @@ export default function CardapioTab({ profileId, planDayDieta, setStartDateDieta
     { key: 'lanche_manha', label: 'Lanche da Manhã' },
     { key: 'almoco', label: 'Almoço' },
     { key: 'lanche_tarde', label: 'Lanche da Tarde' },
-    { key: 'jantar', label: 'Jantar' },
-    { key: 'ceia', label: 'Ceia' }
+    { key: 'jantar', label: 'Jantar' }
   ];
 
   const handleToggleMeal = (mealKey: string) => {
@@ -71,32 +84,34 @@ export default function CardapioTab({ profileId, planDayDieta, setStartDateDieta
 
   return (
     <div className="space-y-6 pb-20">
-      <div className="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-emerald-100 relative">
-        <div>
-          <h3 className="font-bold text-xl flex items-center gap-2 text-slate-800">
-            Cardápio de Hoje
-          </h3>
-          <p className="text-emerald-600 font-medium text-sm mt-1">
-            {currentDayData.dia_semana} — Dia {planDayDieta}
-          </p>
+      <div className={`flex justify-between items-start ${t.surface} p-6 rounded-3xl shadow-sm border ${t.surfaceBorder} relative`}>
+        <div className="flex justify-between items-start relative z-10">
+          <div>
+            <h3 className={`font-bold text-lg md:text-xl ${t.text} mb-1 flex items-center gap-2`}>
+              <ChefHat size={20} />
+              Cardápio Diário
+            </h3>
+            <p className={`text-2xl md:text-3xl font-black italic tracking-tight ${t.primaryText}`}>{currentDayData.dia_semana}</p>
+            <p className={`${t.primaryText} font-medium text-sm mt-1`}>Dia {planDayDieta}</p>
+          </div>
         </div>
         <button 
           onClick={() => setShowTooltip(!showTooltip)}
-          className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-emerald-600 transition-colors"
+          className={`w-10 h-10 rounded-full ${t.surface2} flex items-center justify-center ${t.textMuted} hover:opacity-80 transition-colors`}
         >
           <HelpCircle size={24} />
         </button>
 
         {showTooltip && (
-          <div className="absolute right-6 top-full mt-2 w-80 bg-white border border-slate-200 shadow-xl rounded-2xl p-4 z-30">
+          <div className={`absolute right-6 top-full mt-2 w-80 ${t.surface} border ${t.surfaceBorder} shadow-xl rounded-2xl p-4 z-30`}>
             <div className="flex justify-between items-center mb-3">
-              <h4 className="font-bold text-slate-800 text-sm uppercase tracking-wider">Substituições Permitidas</h4>
-              <button onClick={() => setShowTooltip(false)} className="text-slate-400 hover:text-slate-600"><X size={16} /></button>
+              <h4 className={`font-bold ${t.text} text-sm uppercase tracking-wider`}>Substituições Permitidas</h4>
+              <button onClick={() => setShowTooltip(false)} className={`${t.textMuted} hover:${t.textSecondary}`}><X size={16} /></button>
             </div>
             <ul className="space-y-3">
               {substitutions.map((sub, idx) => (
-                <li key={idx} className="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-100">
-                  <span className="font-bold text-emerald-600 block mb-1">{sub.type}:</span> {sub.text}
+                <li key={idx} className={`text-xs ${t.textSecondary} ${t.surface2} p-2 rounded-lg border ${t.surfaceBorder}`}>
+                  <span className={`font-bold ${t.primaryText} block mb-1`}>{sub.type}:</span> {sub.text}
                 </li>
               ))}
             </ul>
@@ -114,73 +129,96 @@ export default function CardapioTab({ profileId, planDayDieta, setStartDateDieta
           
           const storageKey = `d${planDayDieta}_${meal.key}`;
           const isChecked = !!checkedMeals[storageKey];
+          const isExpanded = expandedMeal === meal.key;
 
           return (
             <div 
               key={meal.key} 
-              className={`flex items-start p-4 rounded-3xl border transition-all ${
+              className={`flex flex-col p-3 md:p-4 rounded-3xl border transition-all ${
                 isChecked 
-                  ? 'bg-emerald-50/50 border-emerald-200/50 opacity-75' 
+                  ? `${t.primarySubtle} ${t.primaryBorder} opacity-60`
                   : isLivreSandra 
                     ? 'bg-amber-50 border-amber-200' 
                     : isAlmocoMarcos
-                      ? 'bg-slate-50 border-slate-200'
-                      : 'bg-white border-emerald-100 shadow-sm'
+                      ? `${t.surface2} ${t.surfaceBorder}`
+                      : `${t.surface} ${t.surfaceBorder} shadow-sm`
               }`}
             >
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className={`font-bold text-xs uppercase tracking-wider ${
-                    isLivreSandra ? 'text-amber-600' : isAlmocoMarcos ? 'text-slate-500' : 'text-emerald-600'
-                  }`}>
-                    {meal.label}
-                  </span>
-                  <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
-                    {mealData.horario}
-                  </span>
-                  {isLivreSandra && <Star size={14} className="text-amber-500 fill-amber-500" />}
-                  {isAlmocoMarcos && <Building2 size={14} className="text-slate-500" />}
+              <div 
+                className="flex items-center justify-between cursor-pointer"
+                onClick={() => setExpandedMeal(isExpanded ? null : meal.key)}
+              >
+                <div className="flex-1 pr-2">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`font-bold text-[10px] md:text-xs uppercase tracking-wider ${
+                      isLivreSandra ? 'text-amber-600' : isAlmocoMarcos ? t.textMuted : t.primaryText
+                    }`}>
+                      {meal.label}
+                    </span>
+                    <span className={`text-[10px] md:text-xs font-bold ${t.textMuted} ${t.surface2} px-2 py-0.5 rounded-full`}>
+                      {mealData.horario}
+                    </span>
+                    {isLivreSandra && <Star size={14} className="text-amber-500 fill-amber-500 shrink-0" />}
+                    {isAlmocoMarcos && <Building2 size={14} className={`${t.textMuted} shrink-0`} />}
+                  </div>
+                  {!isExpanded && (
+                    <p className={`text-xs md:text-sm font-medium truncate w-[200px] sm:w-auto ${isChecked ? `${t.textMuted} line-through` : t.textSecondary}`}>
+                      {mealData.refeicao}
+                    </p>
+                  )}
                 </div>
 
-                <p className={`text-sm font-medium pr-4 ${isChecked ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
-                  {mealData.refeicao}
-                </p>
-                
-                {mealData.kcal && (
-                  <p className="text-xs text-slate-400 mt-2 font-medium">
-                    Aprox. {mealData.kcal} kcal
-                  </p>
-                )}
+                <div className="flex items-center gap-2">
+                  <div className={`${t.textMuted} shrink-0 ${t.surface2} p-1.5 rounded-full`}>
+                    {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  </div>
+                </div>
               </div>
 
-              {!isLivreSandra && (
-                <button 
-                  onClick={() => handleToggleMeal(meal.key)}
-                  className={`w-8 h-8 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors mt-1 ${
-                    isChecked 
-                      ? 'bg-emerald-500 border-emerald-500 text-white' 
-                      : 'border-slate-300 text-transparent hover:border-emerald-400'
-                  }`}
-                >
-                  <Check size={16} strokeWidth={3} />
-                </button>
+              {isExpanded && (
+                <div className={`mt-3 pt-3 border-t ${t.surfaceBorder} flex items-start justify-between gap-4`}>
+                  <div className="flex-1">
+                    <p className={`text-sm font-medium pr-4 ${isChecked ? `${t.textMuted} line-through` : t.text}`}>
+                      {mealData.refeicao}
+                    </p>
+                    
+                    {mealData.kcal && (
+                      <p className={`text-xs ${t.textMuted} mt-2 font-medium`}>
+                        Aprox. {mealData.kcal} kcal
+                      </p>
+                    )}
+                  </div>
+
+                  {!isLivreSandra && (
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); handleToggleMeal(meal.key); }}
+                      className={`w-10 h-10 md:w-8 md:h-8 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors mt-1 ${
+                        isChecked 
+                          ? t.checkOn + ' text-white'
+                          : `bg-transparent ${t.surfaceBorder} text-transparent hover:${t.primaryBorder}`
+                      }`}
+                    >
+                      <Check size={16} strokeWidth={3} />
+                    </button>
+                  )}
+                </div>
               )}
             </div>
           );
         })}
       </div>
 
-      <div className="bg-teal-700 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className={`relative ${t.primary} rounded-3xl p-4 md:p-6 text-white shadow-lg overflow-hidden shrink-0`}>
         <div className="relative z-10">
-          <h3 className="font-bold text-lg mb-2 flex items-center gap-2 text-teal-100">
-            <ChefHat size={24} className="text-teal-300" />
+          <h3 className="font-bold text-lg mb-2 flex items-center gap-2 text-white/90">
+            <ChefHat size={24} className="text-white/70" />
             Dica de Preparo
           </h3>
-          <p className="text-sm text-teal-50 leading-relaxed font-medium">
+          <p className="text-sm text-white/80 leading-relaxed font-medium">
             {currentDayData.dica_preparo}
           </p>
         </div>
-        <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-teal-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
       </div>
     </div>
   );
