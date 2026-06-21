@@ -17,8 +17,15 @@ export function WaterTracker({ profileId }: WaterTrackerProps) {
   
   // Current day string like "2026-06-21"
   const todayStr = new Date().toISOString().substring(0, 10);
-  const todayRecords = waterHistory[todayStr] || [];
-  const currentAmount = todayRecords.reduce((acc, curr) => acc + curr.amount, 0);
+  
+  // currentAmount calculado sempre que waterHistory mudar, garantindo re-render imediato
+  const [currentAmount, setCurrentAmount] = useState(0);
+
+  useEffect(() => {
+    const records = waterHistory[todayStr] || [];
+    const total = records.reduce((acc, curr) => acc + curr.amount, 0);
+    setCurrentAmount(total);
+  }, [waterHistory, todayStr]);
 
   const handleDrink = () => {
     const now = new Date();

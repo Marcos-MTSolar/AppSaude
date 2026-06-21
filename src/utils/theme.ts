@@ -52,6 +52,8 @@ export interface AppTheme {
   inputFocusRing: string;
   sectionDark: string;   // cards escuros internos (ex: timeline)
   sectionDarkBorder: string;
+  primaryHex: string;    // cor primária em formato HEX para uso em SVG
+  primaryBorder: string;
 }
 
 const marcos: AppTheme = {
@@ -99,6 +101,7 @@ const marcos: AppTheme = {
   inputFocusRing: 'focus:ring-cyan-500',
   sectionDark: 'bg-slate-800',
   sectionDarkBorder: 'border-slate-700',
+  primaryHex: '#06b6d4',
 };
 
 const sandra: AppTheme = {
@@ -146,6 +149,7 @@ const sandra: AppTheme = {
   inputFocusRing: 'focus:ring-pink-400',
   sectionDark: 'bg-slate-800',
   sectionDarkBorder: 'border-slate-700',
+  primaryHex: '#ec4899',
 };
 
 export const themes: Record<ProfileId, AppTheme> = { marcos, sandra };

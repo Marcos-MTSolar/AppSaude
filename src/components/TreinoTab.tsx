@@ -3,8 +3,6 @@ import { Play, CheckCircle2, Clock, Dumbbell, Shield, ShieldCheck, Zap, ChevronD
 import { getWorkoutForDay } from '../data/workouts';
 import { WorkoutRunner } from './WorkoutRunner';
 import { getTheme } from '../utils/theme';
-import { getWorkoutForDay } from '../data/workouts';
-import { WorkoutRunner } from './WorkoutRunner';
 
 interface TreinoTabProps {
   profileId: 'marcos' | 'sandra';
