@@ -3,6 +3,8 @@ import { Play, CheckCircle2, Clock, Dumbbell, Shield, ShieldCheck, Zap, ChevronD
 import { getWorkoutForDay } from '../data/workouts';
 import { WorkoutRunner } from './WorkoutRunner';
 import { getTheme } from '../utils/theme';
+import { useSyncedStorage } from '../hooks/useSyncedStorage';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 interface TreinoTabProps {
   profileId: 'marcos' | 'sandra';
@@ -12,30 +14,7 @@ interface TreinoTabProps {
   setAbsoluteStartDateTreinoStr: (date: string) => void;
 }
 
-// Hook matching others
-function useLocalStorage<T>(key: string, initialValue: T) {
-  const [storedValue, setStoredValue] = useState<T>(() => {
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      console.warn('Error reading localStorage', error);
-      return initialValue;
-    }
-  });
 
-  const setValue = (value: T | ((val: T) => T)) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      window.localStorage.setItem(key, JSON.stringify(valueToStore));
-    } catch (error) {
-      console.warn('Error setting localStorage', error);
-    }
-  };
-
-  return [storedValue, setValue] as const;
-}
 
 function ExerciseThumbnail({ gifUrl, alt }: { gifUrl: string, alt: string }) {
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
@@ -76,7 +55,7 @@ export function TreinoTab({ profileId, planDayTreino, absolutePlanDayTreino, set
   const workoutId = todayWorkout ? `${todayWorkout.id}_w${currentWeek}_d${displayPlanDay}` : 'none';
 
   // Mark workout as done for the specific day of plan
-  const [doneWorkouts, setDoneWorkouts] = useLocalStorage<Record<string, { done: boolean, duration?: number }>>(`${profileId}_workouts_done`, {});
+  const [doneWorkouts, setDoneWorkouts] = useSyncedStorage<Record<string, { done: boolean, duration?: number }>>(`${profileId}_workouts_done`, {}, profileId);
   const isDoneToday = doneWorkouts[workoutId]?.done;
 
   const [isRunning, setIsRunning] = useState(false);

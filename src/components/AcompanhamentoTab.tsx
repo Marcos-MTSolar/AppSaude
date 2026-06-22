@@ -4,41 +4,21 @@ import { Activity, Scale, Ruler, CheckCircle2, ChevronRight, AlertCircle, Trash2
 import { getWorkoutForDay } from '../data/workouts';
 import { mealsData } from '../data/meals';
 import { getTheme } from '../utils/theme';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useSyncedStorage } from '../hooks/useSyncedStorage';
 
 interface AcompanhamentoTabProps {
   profileId: 'marcos' | 'sandra';
   absolutePlanDay: number;
 }
 
-function useLocalStorage<T>(key: string, initialValue: T) {
-  const [storedValue, setStoredValue] = useState<T>(() => {
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      console.warn('Error reading localStorage', error);
-      return initialValue;
-    }
-  });
 
-  const setValue = (value: T | ((val: T) => T)) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      window.localStorage.setItem(key, JSON.stringify(valueToStore));
-    } catch (error) {
-      console.warn('Error setting localStorage', error);
-    }
-  };
-
-  return [storedValue, setValue] as const;
-}
 
 export function AcompanhamentoTab({ profileId, absolutePlanDay }: AcompanhamentoTabProps) {
   const t = getTheme(profileId);
   const [weights, setWeights] = useLocalStorage<{ date: string; weight: number }[]>(`${profileId}_weights`, []);
-  const [measurements, setMeasurements] = useLocalStorage<{ date: string; cintura: number; quadril: number; bracos: number; coxas: number; torax: number }[]>(`${profileId}_measurements`, []);
-  const [doneWorkouts] = useLocalStorage<Record<string, { done: boolean, duration?: number }>>(`${profileId}_workouts_done`, {});
+  const [measurements, setMeasurements] = useSyncedStorage<{ date: string; cintura: number; quadril: number; bracos: number; coxas: number; torax: number }[]>(`${profileId}_measurements`, [], profileId);
+  const [doneWorkouts] = useSyncedStorage<Record<string, { done: boolean, duration?: number }>>(`${profileId}_workouts_done`, {}, profileId);
 
   // Form states
   const [weightDate, setWeightDate] = useState(new Date().toISOString().split('T')[0]);

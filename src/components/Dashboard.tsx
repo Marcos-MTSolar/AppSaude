@@ -1,6 +1,7 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import { Home, Utensils, Dumbbell, Activity, FileText, ArrowLeft, MoreVertical, Calendar } from 'lucide-react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useSyncedStorage } from '../hooks/useSyncedStorage';
 import { useWaterReminders } from '../hooks/useWaterReminders';
 import { calculatePlanDay, formatDateBR } from '../utils/date';
 import { getTheme } from '../utils/theme';
@@ -41,9 +42,9 @@ export default function Dashboard({ profile, onLogout }: DashboardProps) {
     }
   }, [profile]);
 
-  const [startDateDietaStr, setStartDateDietaStr] = useLocalStorage<string | null>(`${profile}_data_inicio_dieta`, null);
-  const [startDateTreinoStr, setStartDateTreinoStr] = useLocalStorage<string | null>(`${profile}_data_inicio_treino`, null);
-  const [absoluteStartDateTreinoStr, setAbsoluteStartDateTreinoStr] = useLocalStorage<string | null>(`${profile}_absolute_data_inicio_treino`, null);
+  const [startDateDietaStr, setStartDateDietaStr] = useSyncedStorage<string | null>(`${profile}_data_inicio_dieta`, null, profile);
+  const [startDateTreinoStr, setStartDateTreinoStr] = useSyncedStorage<string | null>(`${profile}_data_inicio_treino`, null, profile);
+  const [absoluteStartDateTreinoStr, setAbsoluteStartDateTreinoStr] = useSyncedStorage<string | null>(`${profile}_absolute_data_inicio_treino`, null, profile);
   
   const [showEditDate, setShowEditDate] = useState(false);
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { HelpCircle, ChefHat, Check, X, MapPin, Star, Building2, ChevronDown, ChevronUp } from 'lucide-react';
 import { mealsData, substitutions } from '../data/meals';
-import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useSyncedStorage } from '../hooks/useSyncedStorage';
 import { getTheme } from '../utils/theme';
 
 interface CardapioTabProps {
@@ -12,7 +12,7 @@ interface CardapioTabProps {
 
 export default function CardapioTab({ profileId, planDayDieta, setStartDateDietaStr }: CardapioTabProps) {
   const [showTooltip, setShowTooltip] = useState(false);
-  const [checkedMeals, setCheckedMeals] = useLocalStorage<Record<string, boolean>>(`${profileId}_meals_checked`, {});
+  const [checkedMeals, setCheckedMeals] = useSyncedStorage<Record<string, boolean>>(`${profileId}_meals_checked`, {}, profileId);
   const [expandedMeal, setExpandedMeal] = useState<string | null>(null);
   const t = getTheme(profileId);
 
