@@ -1,0 +1,25 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // REGRA GERAL DE NEGAÇÃO: bloqueia qualquer acesso não autorizado explicitamente por padrão
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // REGRA ESPECÍFICA DO APP VIDA SAUDÁVEL
+    match /usuarios/{profileId}/dados/{key} {
+      
+      // ⚠️ ATENÇÃO - AVISO DE SEGURANÇA TEMPORÁRIO ⚠️
+      // Como o app ainda não possui autenticação (login/senha ou Firebase Auth anônimo),
+      // o acesso está sendo permitido de forma pública sem verificar `request.auth != null`.
+      // ISSO É INSEGURO E APENAS PARA FASE DE TESTES/DESENVOLVIMENTO.
+      // Assim que o sistema de login ou auth anônimo for implementado no app, 
+      // atualize esta regra imediatamente para exigir a autenticação correspondente.
+      
+      // Validação básica de acesso: permite leitura/escrita APENAS se o profileId for 'marcos' ou 'sandra'
+      allow read, write: if profileId == 'marcos' || profileId == 'sandra';
+    }
+  }
+}

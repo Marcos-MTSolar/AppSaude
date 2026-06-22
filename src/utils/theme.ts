@@ -29,6 +29,10 @@ export interface AppTheme {
   primarySubtleText: string; // texto sobre fundo sutil
   primaryBorder: string;     // borda acento
 
+  // Badges informativos sobre fundo claro
+  infoBadgeBg: string;
+  infoBadgeText: string;
+
   // Logo, perfil e header
   logoBg: string;
   titleFrom: string;
@@ -80,6 +84,9 @@ const marcos: AppTheme = {
   primarySubtleText: 'text-cyan-300',
   primaryBorder: 'border-cyan-800',
 
+  infoBadgeBg: 'bg-cyan-100',
+  infoBadgeText: 'text-cyan-700',
+
   logoBg: 'bg-cyan-600',
   titleFrom: 'from-cyan-400',
   titleTo: 'to-sky-300',
@@ -127,6 +134,9 @@ const sandra: AppTheme = {
   primarySubtle: 'bg-pink-50',
   primarySubtleText: 'text-pink-700',
   primaryBorder: 'border-pink-200',
+
+  infoBadgeBg: 'bg-pink-100',
+  infoBadgeText: 'text-pink-700',
 
   logoBg: 'bg-pink-500',
   titleFrom: 'from-pink-500',

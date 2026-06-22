@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, SkipForward, X, Check, Timer } from 'lucide-react';
+import { Play, Pause, SkipForward, X, Check, Timer, Volume2, VolumeX } from 'lucide-react';
 import { Exercise } from '../data/workouts';
 import { getTheme } from '../utils/theme';
 
@@ -21,8 +21,63 @@ export function WorkoutRunner({ exercises, profileId = 'marcos', onComplete, onC
   const [isPaused, setIsPaused] = useState(false);
   const [totalSecondsElapsed, setTotalSecondsElapsed] = useState(0);
 
+  const [soundEnabled, setSoundEnabled] = useState(() => {
+    const saved = localStorage.getItem(`${profileId}_treino_som_ativo`);
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+
+  const toggleSound = () => {
+    const newVal = !soundEnabled;
+    setSoundEnabled(newVal);
+    localStorage.setItem(`${profileId}_treino_som_ativo`, JSON.stringify(newVal));
+  };
+
+  const playBeep = () => {
+    if (!soundEnabled) return;
+    try {
+      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, ctx.currentTime);
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.15);
+    } catch(e) {}
+  };
+
+  const playSuccess = () => {
+    if (!soundEnabled) return;
+    try {
+      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.3);
+    } catch(e) {}
+  };
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const totalTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastBeepTimeRef = useRef<number | null>(null);
+
+  const [imgStatus, setImgStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
+
+  useEffect(() => {
+    setImgStatus('loading');
+  }, [currentExIdx]);
 
   const currentEx = exercises[currentExIdx];
   const isTimeBased = currentEx?.type === 'time';
@@ -39,18 +94,24 @@ export function WorkoutRunner({ exercises, profileId = 'marcos', onComplete, onC
   useEffect(() => {
     if ((state === 'work' && isTimeBased) || state === 'rest') {
       if (!isPaused && timeLeft > 0) {
+        if (timeLeft <= 3 && lastBeepTimeRef.current !== timeLeft) {
+          playBeep();
+          lastBeepTimeRef.current = timeLeft;
+        }
         timerRef.current = setTimeout(() => setTimeLeft(prev => prev - 1), 1000);
       } else if (!isPaused && timeLeft === 0) {
         // Time's up! Beep?
+        lastBeepTimeRef.current = null;
         try {
           if (navigator.vibrate) navigator.vibrate(200);
         } catch(e) {}
         
+        playSuccess();
         handleTimerComplete();
       }
     }
     return () => clearTimeout(timerRef.current!);
-  }, [timeLeft, isPaused, state, isTimeBased]);
+  }, [timeLeft, isPaused, state, isTimeBased, soundEnabled]);
 
   const handleTimerComplete = () => {
     if (state === 'work') {
@@ -157,9 +218,14 @@ export function WorkoutRunner({ exercises, profileId = 'marcos', onComplete, onC
               Tempo total: {formatTime(totalSecondsElapsed)}
             </span>
           </div>
-          <button onClick={onCancel} className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-600">
-            <X size={20} />
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={toggleSound} className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-600 transition hover:bg-slate-300">
+              {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
+            </button>
+            <button onClick={onCancel} className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-600 transition hover:bg-slate-300">
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         {/* Body */}
@@ -167,11 +233,11 @@ export function WorkoutRunner({ exercises, profileId = 'marcos', onComplete, onC
           <h2 className="text-2xl font-black text-slate-800 mb-2">{currentEx.name}</h2>
           
           {state === 'finished' ? (
-            <div className={`${t.primarySubtle} ${t.primaryText} font-bold mb-8 text-lg px-4 py-1 rounded-full`}>
+            <div className={`${t.infoBadgeBg} ${t.infoBadgeText} font-bold mb-8 text-lg px-4 py-1 rounded-full`}>
               Treino Concluído!
             </div>
           ) : (
-            <div className={`${t.primarySubtle} ${t.primaryText} font-bold mb-8 text-lg px-4 py-1 rounded-full`}>
+            <div className={`${t.infoBadgeBg} ${t.infoBadgeText} font-bold mb-8 text-lg px-4 py-1 rounded-full`}>
               {isTimeBased ? `Série ${currentSet} de ${currentEx.sets}` : `Série ${currentSet} de ${currentEx.sets} • ${currentEx.reps} reps`}
             </div>
           )}
@@ -179,6 +245,28 @@ export function WorkoutRunner({ exercises, profileId = 'marcos', onComplete, onC
           {currentEx.note && state !== 'rest' && (
             <p className="text-slate-500 mb-6 text-sm">{currentEx.note}</p>
           )}
+
+          {/* GIF Area - Nota: As imagens GIF dependem de conexão com a internet. Se falhar ou estiver offline, o fallback genérico será exibido. */}
+          <div className="w-full max-w-[180px] h-28 mx-auto mb-6 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-300 relative overflow-hidden shadow-inner">
+            {currentEx.gifUrl && imgStatus !== 'error' ? (
+              <>
+                {imgStatus === 'loading' && (
+                  <div className="absolute inset-0 animate-pulse bg-slate-200 flex items-center justify-center">
+                    <Timer size={24} className="opacity-20 animate-spin" />
+                  </div>
+                )}
+                <img 
+                  src={currentEx.gifUrl} 
+                  alt={currentEx.name}
+                  className={`w-full h-full object-cover transition-opacity duration-300 ${imgStatus === 'loaded' ? 'opacity-100' : 'opacity-0'}`}
+                  onLoad={() => setImgStatus('loaded')}
+                  onError={() => setImgStatus('error')}
+                />
+              </>
+            ) : (
+               <Timer size={40} className="opacity-30" />
+            )}
+          </div>
 
           {/* Circle Timer */}
           <div className="relative flex items-center justify-center mb-8">
@@ -226,6 +314,7 @@ export function WorkoutRunner({ exercises, profileId = 'marcos', onComplete, onC
           {state === 'idle' && !isTimeBased ? (
             <button 
               onClick={() => {
+                playSuccess();
                 if (currentEx.restTime > 0) startRest();
                 else advanceSetSequence();
               }}

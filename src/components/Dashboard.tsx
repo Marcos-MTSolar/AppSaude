@@ -193,8 +193,14 @@ export default function Dashboard({ profile, onLogout }: DashboardProps) {
           <div className="flex items-center gap-2">
             <div className="p-2 bg-blue-500 rounded-full">💧</div>
             <div>
-              <p className="font-bold text-sm">Hora de beber água!</p>
-              <p className="text-xs text-blue-100">Beba um copo de água e registre na tela Início.</p>
+              <p className="font-bold text-sm">
+                {permission === 'denied' ? 'Lembretes Nativos Desativados' : 'Hora de beber água!'}
+              </p>
+              <p className="text-xs text-blue-100">
+                {permission === 'denied' 
+                  ? 'Você negou a permissão. O lembrete visual aparecerá apenas aqui no app.' 
+                  : 'Beba um copo de água e registre na tela Início.'}
+              </p>
             </div>
           </div>
           <button onClick={dismissFallbackBanner} className="p-2 hover:bg-blue-700 rounded-full text-white">

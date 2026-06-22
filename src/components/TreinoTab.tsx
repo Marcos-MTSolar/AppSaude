@@ -37,9 +37,36 @@ function useLocalStorage<T>(key: string, initialValue: T) {
   return [storedValue, setValue] as const;
 }
 
+function ExerciseThumbnail({ gifUrl, alt }: { gifUrl: string, alt: string }) {
+  const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
+
+  return (
+    <div className="mt-3 w-32 h-20 bg-slate-100 rounded-xl relative overflow-hidden flex items-center justify-center shadow-inner">
+      {status !== 'error' ? (
+        <>
+          {status === 'loading' && (
+            <div className="absolute inset-0 animate-pulse bg-slate-200 flex items-center justify-center">
+              <Dumbbell size={16} className="opacity-20 animate-spin" />
+            </div>
+          )}
+          <img 
+            src={gifUrl} 
+            alt={alt}
+            className={`w-full h-full object-cover transition-opacity duration-300 ${status === 'loaded' ? 'opacity-100' : 'opacity-0'}`}
+            onLoad={() => setStatus('loaded')}
+            onError={() => setStatus('error')}
+          />
+        </>
+      ) : (
+        <Dumbbell size={24} className="text-slate-300 opacity-50" />
+      )}
+    </div>
+  );
+}
+
 export function TreinoTab({ profileId, planDayTreino, absolutePlanDayTreino, setStartDateTreinoStr, setAbsoluteStartDateTreinoStr }: TreinoTabProps) {
   const t = getTheme(profileId);
-  const [dayOffset, setDayOffset] = useState<0 | 1>(1); // 1 = Amanhã, 0 = Hoje
+  const [dayOffset, setDayOffset] = useState<0 | 1>(0); // 1 = Amanhã, 0 = Hoje
 
   const displayPlanDay = absolutePlanDayTreino + dayOffset;
   const currentWeek = Math.max(1, Math.ceil(displayPlanDay / 7));
@@ -296,6 +323,7 @@ export function TreinoTab({ profileId, planDayTreino, absolutePlanDayTreino, set
                       </span>
                     </div>
                     {ex.note && <p className={`text-xs md:text-sm ${t.textMuted} mt-2 font-medium`}>{ex.note}</p>}
+                    {ex.gifUrl && <ExerciseThumbnail gifUrl={ex.gifUrl} alt={ex.name} />}
                   </div>
                 )}
               </div>

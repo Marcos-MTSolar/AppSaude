@@ -9,6 +9,7 @@ export interface Exercise {
   workTime?: number; // seconds (for 'time' or HIIT)
   restTime: number; // seconds
   note?: string;
+  gifUrl?: string;
 }
 
 export interface WorkoutData {
