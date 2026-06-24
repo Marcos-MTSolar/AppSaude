@@ -8,7 +8,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useSyncedStorage } from '../hooks/useSyncedStorage';
 
 interface AcompanhamentoTabProps {
-  profileId: 'marcos' | 'sandra';
+  profileId: 'marcos' | 'sandra' | 'rosimere';
   absolutePlanDay: number;
 }
 

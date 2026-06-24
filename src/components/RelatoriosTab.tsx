@@ -4,7 +4,7 @@ import { mealsData } from '../data/meals';
 import { getTheme } from '../utils/theme';
 
 interface RelatoriosTabProps {
-  profileId: 'marcos' | 'sandra';
+  profileId: 'marcos' | 'sandra' | 'rosimere';
   absolutePlanDay: number;
 }
 

@@ -48,6 +48,29 @@ export const profilesData = {
       'O treino de força é obrigatório nessa fase: a perda de massa muscular com a idade (sarcopenia) é silenciosa e perigosa.',
       'Não pular o lanche da tarde: pular refeições leva a comer mais no jantar.'
     ]
+  },
+  rosimere: {
+    name: 'Rosimere',
+    fullName: 'Rosimere',
+    age: 0,
+    profession: '',
+    height: 0,
+    weightCurrent: 0,
+    weightGoal: 0,
+    weightLossGoal: 0,
+    bmiCurrent: 0,
+    bmiStatus: '',
+    bmiGoal: '',
+    timeframe: '',
+    mainGoal: 'Recuperação nutricional — câncer intestinal + metástase hepática em quimioterapia',
+    criticalNote: 'Cardápio adaptado para dias de quimioterapia. Nutren Senior 2x ao dia é obrigatório.',
+    trainingSchedule: '',
+    dietGoal: '1.600 a 1.800 kcal/dia, 60 a 75g de proteína/dia',
+    mealsInfo: '6 a 8 pequenas refeições por dia, a cada 2–3 horas',
+    specificRules: [
+      'Alimentos proibidos: frituras, ultraprocessados, bebidas gasosas, álcool, chá verde, erva-mate',
+      'Nutren Senior: 2x ao dia (obrigatório)'
+    ]
   }
 };
 

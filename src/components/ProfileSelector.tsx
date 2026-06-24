@@ -3,11 +3,11 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { calculatePlanDay } from '../utils/date';
 
 interface ProfileCardProps {
-  id: 'marcos' | 'sandra';
+  id: 'marcos' | 'sandra' | 'rosimere';
   name: string;
   color: string;
   textColor: string;
-  onSelect: (id: 'marcos' | 'sandra') => void;
+  onSelect: (id: 'marcos' | 'sandra' | 'rosimere') => void;
 }
 
 function ProfileCard({ id, name, color, textColor, onSelect }: ProfileCardProps) {
@@ -59,7 +59,7 @@ function ProfileCard({ id, name, color, textColor, onSelect }: ProfileCardProps)
 }
 
 interface ProfileSelectorProps {
-  onSelect: (id: 'marcos' | 'sandra') => void;
+  onSelect: (id: 'marcos' | 'sandra' | 'rosimere') => void;
 }
 
 export default function ProfileSelector({ onSelect }: ProfileSelectorProps) {
@@ -85,6 +85,13 @@ export default function ProfileSelector({ onSelect }: ProfileSelectorProps) {
             name="Sandra" 
             color="bg-emerald-600"
             textColor="text-emerald-600" 
+            onSelect={onSelect} 
+          />
+          <ProfileCard 
+            id="rosimere" 
+            name="Rosimere" 
+            color="bg-rose-500"
+            textColor="text-rose-500" 
             onSelect={onSelect} 
           />
         </div>

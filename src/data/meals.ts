@@ -19,7 +19,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos com tomate + 2 col. sopa de cuscuz nordestino + café s/ açúcar", "kcal": 410 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 banana + 1 col. pasta de amendoim", "kcal": 180 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Frango grelhado (150g) + legumes refogados (abobrinha + cenoura)", "kcal": 320 }
         },
@@ -40,7 +44,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "Omelete (3 ovos + queijo branco) + 2 col. sopa de cuscuz nordestino + café s/ açúcar", "kcal": 390 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 iogurte grego + 10 castanhas-de-caju", "kcal": 200 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Peixe tilápia grelhado (150g) + brócolis no vapor + batata-doce pequena", "kcal": 350 }
         },
@@ -61,7 +69,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos cozidos + 2 col. sopa de cuscuz nordestino + 1 fatia queijo branco + café", "kcal": 400 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 maçã + 1 col. pasta de amendoim", "kcal": 170 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Carne bovina magra (patinho 150g) grelhada + abobrinha refogada + salada", "kcal": 380 }
         },
@@ -82,7 +94,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos + 2 col. sopa de cuscuz nordestino + café", "kcal": 400 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 banana + 10 castanhas-de-caju", "kcal": 200 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Frango desfiado (150g) + brócolis + cenoura refogada", "kcal": 310 }
         },
@@ -103,7 +119,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos + tomate + 2 col. sopa de cuscuz nordestino + café", "kcal": 410 },
           "lanche_manha": { "horario": "09:00", "refeicao": "2 fatias de queijo branco + 1 fruta", "kcal": 190 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Atum em lata (120g, óleo de oliva) + batata-doce cozida + salada", "kcal": 340 }
         },
@@ -124,7 +144,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "Tapioca (1 unid.) com ovo mexido e queijo branco + café", "kcal": 380 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 banana + 2 col. sopa de cuscuz nordestino com 1 col. pasta de amendoim", "kcal": 230 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Frango ao forno com ervas (150g) + purê de batata-doce + salada", "kcal": 400 }
         },
@@ -145,7 +169,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos + 2 col. sopa de cuscuz nordestino + queijo branco + café", "kcal": 430 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 fruta da estação + 10 castanhas-de-caju", "kcal": 190 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Peixe grelhado (150g) + legumes assados + salada", "kcal": 340 }
         },
@@ -205,7 +233,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "Omelete de 3 ovos com espinafre + 2 col. sopa de cuscuz nordestino + café", "kcal": 400 },
           "lanche_manha": { "horario": "09:00", "refeicao": "200ml leite desnatado com 1 col. aveia + 1 maçã", "kcal": 190 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Frango xadrez caseiro (150g frango, pimentão, cebola, shoyu light) + arroz integral (2 col.)", "kcal": 420 }
         },
@@ -226,7 +258,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos cozidos + 2 col. sopa de cuscuz nordestino + queijo branco + café", "kcal": 420 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 banana + 1 col. pasta de amendoim", "kcal": 180 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Sardinha em lata (azeite) + batata-doce cozida (130g) + salada", "kcal": 370 }
         },
@@ -247,7 +283,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos com tomate + 2 col. sopa de cuscuz nordestino + café", "kcal": 410 },
           "lanche_manha": { "horario": "09:00", "refeicao": "10 castanhas-de-caju + 1 laranja", "kcal": 180 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Peito de frango grelhado (150g) + quinoa cozida (3 col.) + salada", "kcal": 410 }
         },
@@ -268,7 +308,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "Tapioca (1 unid.) com ovo e queijo branco + café", "kcal": 380 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 iogurte grego + 2 col. sopa de cuscuz nordestino + 1 fruta", "kcal": 240 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Carne bovina magra (150g) refogada com cebola + couve refogada", "kcal": 370 }
         },
@@ -289,7 +333,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos com cogumelo + 2 col. sopa de cuscuz nordestino + café", "kcal": 400 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 banana + 10 castanhas-de-caju", "kcal": 200 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Peixe tilápia ao molho de tomate caseiro (150g) + brócolis", "kcal": 340 }
         },
@@ -310,7 +358,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos + 2 col. sopa de cuscuz nordestino + queijo branco + café", "kcal": 410 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 iogurte grego + 1 fruta", "kcal": 190 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Frango ao curry light (150g, leite de coco light + curry) + arroz integral", "kcal": 440 }
         },
@@ -331,7 +383,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "Omelete especial (3 ovos + peito de peru + queijo branco) + 2 col. sopa de cuscuz nordestino + café", "kcal": 430 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 banana + 1 col. pasta de amendoim", "kcal": 180 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Peixe grelhado com limão e ervas (150g) + purê de abóbora + salada", "kcal": 350 }
         },
@@ -390,7 +446,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos cozidos + 2 col. sopa de cuscuz nordestino + requeijão light + café", "kcal": 420 },
           "lanche_manha": { "horario": "09:00", "refeicao": "2 fatias de queijo branco + 1 maçã", "kcal": 190 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Frango desfiado (150g) com molho de iogurte + batata-doce assada", "kcal": 390 }
         },
@@ -411,7 +471,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos + 2 col. sopa de cuscuz nordestino + café", "kcal": 400 },
           "lanche_manha": { "horario": "09:00", "refeicao": "10 castanhas-de-caju + 1 banana", "kcal": 200 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Atum (120g) + batata-doce cozida + cenoura e vagem no vapor", "kcal": 360 }
         },
@@ -432,7 +496,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "Omelete (3 ovos + tomate + cebola) + 2 col. sopa de cuscuz nordestino + café", "kcal": 370 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 iogurte grego + 1 fruta", "kcal": 190 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Frango cozido desfiado (150g) com legumes refogados + cuscuz nordestino", "kcal": 420 }
         },
@@ -453,7 +521,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos com queijo + 2 col. sopa de cuscuz nordestino + café", "kcal": 410 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 banana + 1 col. pasta de amendoim", "kcal": 180 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Sardinha grelhada (2 latas) + brócolis + batata-doce (100g)", "kcal": 380 }
         },
@@ -474,7 +546,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos cozidos + 2 col. sopa de cuscuz nordestino + café", "kcal": 400 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 iogurte grego + 10 castanhas-de-caju", "kcal": 200 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Frango ao forno com alho e ervas (150g) + purê de batata-doce + salada", "kcal": 410 }
         },
@@ -495,7 +571,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "Tapioca (1 unid.) recheada com ovo e queijo + café", "kcal": 380 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 fruta + 2 col. sopa de cuscuz nordestino + 1 col. pasta de amendoim", "kcal": 230 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Peixe na telha caseiro (tilápia com tomate, cebola, limão, 150g)", "kcal": 360 }
         },
@@ -516,7 +596,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos + 2 col. sopa de cuscuz nordestino + queijo + café", "kcal": 410 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 iogurte grego + 1 banana", "kcal": 200 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Frango grelhado (150g) + legumes variados assados + salada", "kcal": 350 }
         },
@@ -574,7 +658,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos com espinafre e tomate + 2 col. sopa de cuscuz nordestino + café", "kcal": 400 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 pote de queijo cottage (100g) + 1 maçã", "kcal": 190 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Frango desfiado (150g) + cuscuz nordestino + legumes refogados", "kcal": 420 }
         },
@@ -595,7 +683,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "Omelete (3 ovos + peito de peru + queijo) + 2 col. sopa de cuscuz nordestino + café", "kcal": 420 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 banana + 10 castanhas-de-caju", "kcal": 200 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Peixe grelhado (150g) + quinoa (2 col.) + abobrinha e cenoura", "kcal": 400 }
         },
@@ -616,7 +708,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos cozidos + 2 col. sopa de cuscuz nordestino + café", "kcal": 400 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 iogurte grego + 1 fruta", "kcal": 190 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Frango ao molho shoyu light (150g) + brócolis + arroz integral (2 col.)", "kcal": 430 }
         },
@@ -637,7 +733,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos + 2 col. sopa de cuscuz nordestino + café", "kcal": 400 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 banana + 1 col. pasta de amendoim", "kcal": 180 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Carne bovina magra (150g) com brócolis + batata-doce", "kcal": 400 }
         },
@@ -658,7 +758,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "Omelete (3 ovos + cogumelo + espinafre) + 2 col. sopa de cuscuz nordestino + café", "kcal": 400 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 iogurte grego + 1 fruta", "kcal": 190 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Tilápia ao forno com ervas (150g) + legumes assados + salada", "kcal": 360 }
         },
@@ -679,7 +783,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "Tapioca (1 unid.) com ovo + queijo + café", "kcal": 380 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 fruta + 2 col. sopa de cuscuz nordestino + 10 castanhas-de-caju", "kcal": 240 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Frango grelhado (150g) + cuscuz nordestino + legumes", "kcal": 420 }
         },
@@ -700,7 +808,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos com tomate + 2 col. sopa de cuscuz nordestino + queijo + café", "kcal": 410 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 iogurte grego + 1 banana", "kcal": 200 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Peixe grelhado (150g) + purê de abóbora + salada", "kcal": 360 }
         },
@@ -721,7 +833,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos + 2 col. sopa de cuscuz nordestino + café", "kcal": 400 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 banana + 10 castanhas-de-caju", "kcal": 200 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Frango grelhado (150g) + brócolis + arroz integral (2 col.)", "kcal": 410 }
         },
@@ -742,7 +858,11 @@ export const mealsData = [
         "marcos": {
           "cafe_manha": { "horario": "06:00", "refeicao": "3 ovos mexidos com espinafre + 2 col. sopa de cuscuz nordestino + café", "kcal": 400 },
           "lanche_manha": { "horario": "09:00", "refeicao": "1 iogurte grego + 1 banana", "kcal": 200 },
-          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null },
+          "almoco": { "horario": "12:00", "refeicao": "fora de casa, priorize proteína + salada, evite frituras e refrigerante", "kcal": null , "opcaoCasa": {
+              "descricao": "Almoço caseiro nordestino",
+              "alimentos": ["Arroz (2 col.)", "Feijão (1 concha)", "Carne bovina, frango ou peixe (120g)", "Ovo frito ou mexido", "Legume cozido (cenoura, chuchu, maxixe)"],
+              "observacao": "Refeição balanceada equivalente para quando estiver em casa."
+            } },
           "lanche_tarde": { "horario": "15:00", "refeicao": "fora, fruta ou castanhas se possível", "kcal": null },
           "jantar": { "horario": "18:30", "refeicao": "Peixe grelhado (150g) + legumes assados + salada verde", "kcal": 350 }
         },
@@ -787,6 +907,59 @@ export const mealsData = [
         {"item": "Granola sem açúcar", "qtd": "400 g", "onde": "Mercado", "custo": 14.0}
       ],
       "total": 323.0
+    }
+  }
+];
+
+export const rosimere_meals = [
+  {
+    fase: "fase1",
+    titulo: "Dia da Quimio",
+    dica: "Dia da Quimioterapia",
+    refeicoes: {
+      cafe_manha: { horario: "06:00", refeicao: "1 fatia de pão de forma com manteiga leve + 1 copo de Nutren Senior gelado", dica: "Preferir gelado nos dias de enjoo" },
+      lanche_manha: { horario: "Durante infusão", refeicao: "Água em temperatura ambiente + biscoito de água e sal + bala de gengibre natural", dica: "Gengibre ajuda a reduzir náuseas" },
+      almoco: { horario: "Chegando em casa", refeicao: "Sopa de legumes batida e coada (cenoura + batata + chuchu + frango desfiado), morna, sem temperos fortes", dica: "Morna para facilitar digestão" },
+      jantar: { horario: "20:00", refeicao: "1 copo de Nutren Senior + 2 biscoitos de arroz (se tolerar)", dica: "Nutren Senior ajuda a bater a meta calórica e proteica" }
+    }
+  },
+  {
+    fase: "fase2",
+    titulo: "Dias 2–3 (Enjoo)",
+    dica: "Dias 2 e 3 após quimio (enjoo ainda presente)",
+    refeicoes: {
+      cafe_manha: { horario: "07:00", refeicao: "Mingau de aveia fino com banana amassada e mel + 1 copo de Nutren Senior", dica: "Fácil digestão" },
+      lanche_manha: { horario: "09:30", refeicao: "Vitamina de banana + pasta de amendoim + leite morno + mel", dica: "Rica em calorias" },
+      almoco: { horario: "12:00", refeicao: "Purê de batata cremoso + frango desfiado cozido sem pele + cenoura cozida amassada", dica: "Sem pele para evitar gordura pesada" },
+      lanche_tarde: { horario: "15:00", refeicao: "Iogurte natural sem sabor + 1 colher de aveia fina + mel", dica: "Fonte de probióticos" },
+      jantar: { horario: "18:00", refeicao: "Caldo de feijão batido e coado + 2 colheres de arroz bem cozido + 1 ovo mexido", dica: "Rico em ferro — ótimo para a anemia" },
+      ceia: { horario: "21:00", refeicao: "1 copo de Nutren Senior frio", dica: "Preferir frio nos dias de enjoo" }
+    }
+  },
+  {
+    fase: "fase3",
+    titulo: "Dias 4–14 (Em casa)",
+    dica: "Dias 4 a 14 (medicação oral em casa, maior tolerância)",
+    refeicoes: {
+      cafe_manha: { horario: "07:00", refeicao: "1 copo de Nutren Senior + 2 fatias de pão integral com ovo mexido (1–2 ovos) + 1 fruta (mamão, banana ou manga)", dica: "Refeição completa" },
+      lanche_manha: { horario: "09:30", refeicao: "Vitamina de banana + mamão + leite integral + aveia + pasta de amendoim", dica: "Vitamina calórica para recuperação" },
+      almoco: { horario: "12:00", refeicao: "4–5 col de arroz bem cozido + feijão cremoso (3–4 col) + proteína (100–120g): carne vermelha magra, frango ou peixe + purê de abóbora ou batata doce + legume cozido (chuchu, cenoura). Acompanhar com suco de laranja.", dica: "Suco de laranja ajuda na absorção de ferro" },
+      lanche_tarde: { horario: "15:00", refeicao: "Iogurte natural + 1 col de granola sem açúcar + fruta picada (ou banana com aveia e mel)", dica: "Lanche balanceado" },
+      jantar: { horario: "18:00", refeicao: "Sopa completa: caldo de frango caseiro + batata + cenoura + chuchu + macarrão de arroz + frango desfiado + 1 col de azeite ao servir", dica: "Sopa nutritiva para hidratar e alimentar" },
+      ceia: { horario: "21:00", refeicao: "1 copo de Nutren Senior + 1 banana ou 2 biscoitos de arroz", dica: "Garante proteína antes de dormir" }
+    }
+  },
+  {
+    fase: "fase4",
+    titulo: "Semana de Descanso",
+    dica: "Semana de descanso (sem medicação, maior recuperação)",
+    refeicoes: {
+      cafe_manha: { horario: "07:00", refeicao: "Nutren Senior + tapioca recheada (queijo + ovo) ou pão de queijo caseiro + vitamina de frutas com leite integral", dica: "Fase de recuperar peso" },
+      lanche_manha: { horario: "09:30", refeicao: "Vitamina de manga + banana + leite + pasta de amendoim", dica: "Alta densidade calórica" },
+      almoco: { horario: "12:00", refeicao: "Arroz + feijão + proteína animal (carne bovina, frango, peixe ou ovo) + 2 tipos de legumes cozidos + salada de beterraba e cenoura + suco de laranja natural", dica: "Beterraba e feijão para evitar anemia" },
+      lanche_tarde: { horario: "15:00", refeicao: "Iogurte + granola + fruta ou pão integral com queijo branco", dica: "Energia para a tarde" },
+      jantar: { horario: "18:00", refeicao: "Macarrão com molho de tomate caseiro + frango desfiado + queijo ralado leve + folhas cozidas (couve ou espinafre)", dica: "Couve/espinafre ricos em ferro e ácido fólico" },
+      ceia: { horario: "21:00", refeicao: "Nutren Senior + biscoito de água e sal ou 1 fruta", dica: "Último aporte do dia" }
     }
   }
 ];

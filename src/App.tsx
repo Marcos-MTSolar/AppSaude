@@ -8,7 +8,7 @@ import ProfileSelector from './components/ProfileSelector';
 import Dashboard from './components/Dashboard';
 
 export default function App() {
-  const [profile, setProfile] = useState<'marcos' | 'sandra' | null>(null);
+  const [profile, setProfile] = useState<'marcos' | 'sandra' | 'rosimere' | null>(null);
 
   if (!profile) {
     return <ProfileSelector onSelect={setProfile} />;

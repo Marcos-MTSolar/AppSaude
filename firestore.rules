@@ -18,8 +18,8 @@ service cloud.firestore {
       // Assim que o sistema de login ou auth anônimo for implementado no app, 
       // atualize esta regra imediatamente para exigir a autenticação correspondente.
       
-      // Validação básica de acesso: permite leitura/escrita APENAS se o profileId for 'marcos' ou 'sandra'
-      allow read, write: if profileId == 'marcos' || profileId == 'sandra';
+      // Validação básica de acesso: permite leitura/escrita APENAS se o profileId for 'marcos', 'sandra' ou 'rosimere'
+      allow read, write: if profileId == 'marcos' || profileId == 'sandra' || profileId == 'rosimere';
     }
   }
 }

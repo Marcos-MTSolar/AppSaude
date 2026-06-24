@@ -7,7 +7,7 @@ import { useSyncedStorage } from '../hooks/useSyncedStorage';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 interface TreinoTabProps {
-  profileId: 'marcos' | 'sandra';
+  profileId: 'marcos' | 'sandra' | 'rosimere';
   planDayTreino: number | null;
   absolutePlanDayTreino: number;
   setStartDateTreinoStr: (date: string) => void;
@@ -45,6 +45,7 @@ function ExerciseThumbnail({ gifUrl, alt }: { gifUrl: string, alt: string }) {
 
 export function TreinoTab({ profileId, planDayTreino, absolutePlanDayTreino, setStartDateTreinoStr, setAbsoluteStartDateTreinoStr }: TreinoTabProps) {
   const t = getTheme(profileId);
+  if (profileId === 'rosimere') return null;
   const [dayOffset, setDayOffset] = useState<0 | 1>(0); // 1 = Amanhã, 0 = Hoje
 
   const displayPlanDay = absolutePlanDayTreino + dayOffset;

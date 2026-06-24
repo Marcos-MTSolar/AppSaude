@@ -5,7 +5,7 @@ import { getTheme } from '../utils/theme';
 import { formatDateBR } from '../utils/date';
 
 interface InicioTabProps {
-  profileId: 'marcos' | 'sandra';
+  profileId: 'marcos' | 'sandra' | 'rosimere';
   planDayDieta: number | null;
   planDayTreino: number | null;
   absolutePlanDayTreino: number;

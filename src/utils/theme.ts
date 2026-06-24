@@ -1,5 +1,5 @@
 // Paletas de cores por perfil — usada em todos os componentes do app
-export type ProfileId = 'marcos' | 'sandra';
+export type ProfileId = 'marcos' | 'sandra' | 'rosimere';
 
 export interface AppTheme {
   // Layout principal
@@ -57,7 +57,7 @@ export interface AppTheme {
   sectionDark: string;   // cards escuros internos (ex: timeline)
   sectionDarkBorder: string;
   primaryHex: string;    // cor primária em formato HEX para uso em SVG
-  primaryBorder: string;
+
 }
 
 const marcos: AppTheme = {
@@ -162,5 +162,56 @@ const sandra: AppTheme = {
   primaryHex: '#ec4899',
 };
 
-export const themes: Record<ProfileId, AppTheme> = { marcos, sandra };
+const rosimere: AppTheme = {
+  pageBg: 'bg-rose-50',
+  surface: 'bg-white',
+  surface2: 'bg-rose-50',
+  surfaceBorder: 'border-rose-100',
+
+  headerBg: 'bg-white',
+  headerBorder: 'border-rose-100',
+  navBg: 'bg-white',
+  navBorder: 'border-rose-100',
+  navActive: 'text-rose-500',
+  navInactive: 'text-slate-400',
+
+  text: 'text-slate-800',
+  textSecondary: 'text-slate-600',
+  textMuted: 'text-slate-500',
+
+  primary: 'bg-rose-500',
+  primaryHover: 'hover:bg-rose-400',
+  primaryText: 'text-rose-500',
+  primarySubtle: 'bg-rose-50',
+  primarySubtleText: 'text-rose-700',
+  primaryBorder: 'border-rose-200',
+
+  infoBadgeBg: 'bg-rose-100',
+  infoBadgeText: 'text-rose-700',
+
+  logoBg: 'bg-rose-500',
+  titleFrom: 'from-rose-500',
+  titleTo: 'to-pink-400',
+  profilePillBg: 'bg-rose-50',
+  profilePillBorder: 'border-rose-200',
+  profileAvatarBg: 'bg-rose-500',
+  profileNameText: 'text-rose-700',
+  profileBtnText: 'text-rose-600',
+  profileBtnHover: 'hover:bg-rose-100',
+  profileBtnBorder: 'border-rose-200',
+  switchBtnText: 'text-rose-600',
+  switchBtnHover: 'hover:bg-rose-100',
+  switchBtnBorder: 'border-rose-200',
+
+  progressBar: 'bg-rose-500',
+  checkOn: 'bg-rose-500 border-rose-500',
+  inputBg: 'bg-slate-50',
+  inputBorder: 'border-slate-200',
+  inputFocusRing: 'focus:ring-rose-400',
+  sectionDark: 'bg-slate-800',
+  sectionDarkBorder: 'border-slate-700',
+  primaryHex: '#f43f5e',
+};
+
+export const themes: Record<ProfileId, AppTheme> = { marcos, sandra, rosimere };
 export const getTheme = (profile: ProfileId): AppTheme => themes[profile];

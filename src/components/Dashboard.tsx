@@ -1,5 +1,6 @@
-import { useState, useEffect, ChangeEvent } from 'react';
-import { Home, Utensils, Dumbbell, Activity, FileText, ArrowLeft, MoreVertical, Calendar } from 'lucide-react';
+import { useState, useEffect, useRef, ChangeEvent } from 'react';
+import { Home, Utensils, Dumbbell, Activity, FileText, ArrowLeft, MoreVertical, Calendar, Cloud, CloudOff, RefreshCw } from 'lucide-react';
+import { useFirestoreStatus, registerSyncingCallback, SyncStatus } from '../hooks/useFirestoreStatus';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useSyncedStorage } from '../hooks/useSyncedStorage';
 import { useWaterReminders } from '../hooks/useWaterReminders';
@@ -12,14 +13,35 @@ import { RelatoriosTab } from './RelatoriosTab';
 import { TreinoTab } from './TreinoTab';
 
 interface DashboardProps {
-  profile: 'marcos' | 'sandra';
+  profile: 'marcos' | 'sandra' | 'rosimere';
   onLogout: () => void;
 }
 
 type TabType = 'inicio' | 'cardapio' | 'treino' | 'acompanhamento' | 'relatorios';
 
 export default function Dashboard({ profile, onLogout }: DashboardProps) {
-  const [activeTab, setActiveTab] = useState<TabType>('inicio');
+  const [activeTab, setActiveTab] = useState<TabType>(profile === 'rosimere' ? 'cardapio' : 'inicio');
+  const networkStatus = useFirestoreStatus();
+  const [isSyncing, setIsSyncing] = useState(false);
+  const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Registra callback para receber notificações de saves em andamento
+  useEffect(() => {
+    const unregister = registerSyncingCallback((syncing) => {
+      if (syncing) {
+        setIsSyncing(true);
+        // Auto-resolve depois de 3s (timeout de segurança)
+        if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+        syncTimerRef.current = setTimeout(() => setIsSyncing(false), 3000);
+      } else {
+        if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+        setIsSyncing(false);
+      }
+    });
+    return unregister;
+  }, []);
+
+  const syncStatus: SyncStatus = networkStatus === 'offline' ? 'offline' : isSyncing ? 'syncing' : 'synced';
   // Migração de dados legados
   useEffect(() => {
     const legacyStart = window.localStorage.getItem(`${profile}_data_inicio`);
@@ -53,7 +75,7 @@ export default function Dashboard({ profile, onLogout }: DashboardProps) {
   const planDayDieta = calculatePlanDay(startDateDietaStr);
   const planDayTreino = calculatePlanDay(startDateTreinoStr);
   const absolutePlanDayTreino = calculatePlanDay(absoluteStartDateTreinoStr) || planDayTreino || 1;
-  const profileName = profile === 'marcos' ? 'Marcos' : 'Sandra';
+  const profileName = profile === 'marcos' ? 'Marcos' : profile === 'sandra' ? 'Sandra' : 'Rosimere';
   const t = getTheme(profile);
 
   const handleEditDateDieta = (e: ChangeEvent<HTMLInputElement>) => {
@@ -73,13 +95,19 @@ export default function Dashboard({ profile, onLogout }: DashboardProps) {
     }
   };
 
-  const tabs = [
+  let tabs = [
     { id: 'inicio', label: 'Início', icon: Home },
     { id: 'cardapio', label: 'Cardápio', icon: Utensils },
     { id: 'treino', label: 'Treino', icon: Dumbbell },
     { id: 'acompanhamento', label: 'Ficha', icon: Activity },
     { id: 'relatorios', label: 'Relatórios', icon: FileText },
   ] as const;
+
+  if (profile === 'rosimere') {
+    tabs = [
+      { id: 'cardapio', label: 'Cardápio', icon: Utensils }
+    ] as any;
+  }
 
   const renderContent = () => {
     // Removido o bloco global de "ainda não iniciou" ou "completou ciclo".
@@ -146,6 +174,24 @@ export default function Dashboard({ profile, onLogout }: DashboardProps) {
         </div>
         
         <div className="flex items-center gap-2 md:gap-4">
+          {/* Indicador de sincronização */}
+          <div
+            title={syncStatus === 'synced' ? 'Dados sincronizados' : syncStatus === 'syncing' ? 'Sincronizando...' : 'Sem conexão — dados locais'}
+            className={`flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold transition-all ${
+              syncStatus === 'synced'
+                ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+                : syncStatus === 'syncing'
+                ? 'bg-blue-50 text-blue-500 border border-blue-200'
+                : 'bg-slate-100 text-slate-400 border border-slate-200'
+            }`}
+          >
+            {syncStatus === 'synced' && <Cloud size={12} />}
+            {syncStatus === 'syncing' && <RefreshCw size={12} className="animate-spin" />}
+            {syncStatus === 'offline' && <CloudOff size={12} />}
+            <span className="hidden md:inline">
+              {syncStatus === 'synced' ? 'Sync ✓' : syncStatus === 'syncing' ? 'Sincronizando...' : 'Offline'}
+            </span>
+          </div>
           <div className={`flex items-center gap-2 md:gap-3 ${t.profilePillBg} px-2 md:px-4 py-1.5 md:py-2 rounded-full border ${t.profilePillBorder} relative`}>
             <div className={`w-8 h-8 ${t.profileAvatarBg} rounded-full flex items-center justify-center text-white text-xs font-bold`}>
               {profileName.charAt(0)}

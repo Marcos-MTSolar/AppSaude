@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
+import { Capacitor } from '@capacitor/core';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCjn9j6xHzmObqDKnJijDmPhotlBzKpBks",
@@ -13,11 +14,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
-// Habilita persistência offline (cache via IndexedDB)
-enableIndexedDbPersistence(db).catch((err) => {
-  if (err.code == 'failed-precondition') {
-    console.warn('Firebase persistência falhou: múltiplas abas abertas.');
-  } else if (err.code == 'unimplemented') {
-    console.warn('Firebase persistência falhou: navegador não suportado.');
-  }
-});
+// Habilita persistência offline (cache via IndexedDB) apenas no app nativo
+if (Capacitor.isNativePlatform()) {
+  enableIndexedDbPersistence(db).catch((err) => {
+    if (err.code == 'failed-precondition') {
+      console.warn('Firebase persistência falhou: múltiplas abas abertas.');
+    } else if (err.code == 'unimplemented') {
+      console.warn('Firebase persistência falhou: navegador não suportado.');
+    }
+  });
+}
