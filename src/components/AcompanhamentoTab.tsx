@@ -4,7 +4,6 @@ import { Activity, Scale, Ruler, CheckCircle2, ChevronRight, AlertCircle, Trash2
 import { getWorkoutForDay } from '../data/workouts';
 import { mealsData } from '../data/meals';
 import { getTheme } from '../utils/theme';
-import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useSyncedStorage } from '../hooks/useSyncedStorage';
 
 interface AcompanhamentoTabProps {
@@ -16,7 +15,7 @@ interface AcompanhamentoTabProps {
 
 export function AcompanhamentoTab({ profileId, absolutePlanDay }: AcompanhamentoTabProps) {
   const t = getTheme(profileId);
-  const [weights, setWeights] = useLocalStorage<{ date: string; weight: number }[]>(`${profileId}_weights`, []);
+  const [weights, setWeights] = useSyncedStorage<{ date: string; weight: number }[]>(`${profileId}_weights`, [], profileId);
   const [measurements, setMeasurements] = useSyncedStorage<{ date: string; cintura: number; quadril: number; bracos: number; coxas: number; torax: number }[]>(`${profileId}_measurements`, [], profileId);
   const [doneWorkouts] = useSyncedStorage<Record<string, { done: boolean, duration?: number }>>(`${profileId}_workouts_done`, {}, profileId);
 

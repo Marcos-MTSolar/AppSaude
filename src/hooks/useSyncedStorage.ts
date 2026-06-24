@@ -10,11 +10,13 @@ import { notifySyncing } from './useFirestoreStatus';
  * Funciona offline-first: a interface usa localStorage para velocidade e tolerância a falhas,
  * e a sincronização ocorre em background via onSnapshot e persistência nativa do Firestore.
  *
- * Correções v2:
- * - onSnapshot com { source: 'default' } → força recepção do servidor, não só do cache.
- * - Uso de useRef para rastrear o timestamp do último save local e evitar loops de eco.
- * - Listener garantidamente destruído no cleanup do useEffect (sem duplicatas).
- * - Notifica o hook de status global (useFirestoreStatus) ao salvar.
+ * Correções v3:
+ * - Correção 2: Remove prefixo duplicado do profileId no caminho do Firestore.
+ *   O localStorage mantém a chave completa (ex: "marcos_weights") para retrocompatibilidade,
+ *   mas o Firestore usa apenas a parte sem o prefixo (ex: "weights") no caminho
+ *   usuarios/{profileId}/dados/{firestoreKey}.
+ * - Correção 3: onSnapshot com erro agora chama notifySyncing(false) para refletir
+ *   o estado "offline" no indicador visual do Dashboard.
  */
 export function useSyncedStorage<T>(key: string, initialValue: T, profileId: string) {
 
@@ -32,15 +34,20 @@ export function useSyncedStorage<T>(key: string, initialValue: T, profileId: str
   // Usar ref para o timestamp do último save local evita re-registrar o listener a cada save
   const lastLocalUpdateRef = useRef<number>(0);
 
+  // Correção 2: Remove prefixo duplicado para o caminho do Firestore.
+  // Ex: "marcos_weights" → chave LS intacta, Firestore usa "weights" em usuarios/marcos/dados/weights
+  const firestoreKey = key.startsWith(`${profileId}_`)
+    ? key.slice(profileId.length + 1)
+    : key;
+
   // 2. Listener do Firestore para receber mudanças de outro dispositivo
   useEffect(() => {
     if (!profileId || !key) return;
 
-    // A estrutura adotada no syncService: usuarios/{profileId}/dados/{key}
-    const docRef = doc(db, 'usuarios', profileId, 'dados', key);
+    const docRef = doc(db, 'usuarios', profileId, 'dados', firestoreKey);
 
-    // { source: 'default' } → tenta o servidor primeiro; usa cache só se offline.
-    // Isso garante que atualizações do APK apareçam na web em tempo real.
+    // includeMetadataChanges: false → só dispara para dados confirmados no servidor,
+    // não para operações pendentes locais. Garante recepção do APK em tempo real na web.
     const unsubscribe = onSnapshot(
       docRef,
       { includeMetadataChanges: false },
@@ -53,7 +60,7 @@ export function useSyncedStorage<T>(key: string, initialValue: T, profileId: str
           ? new Date(remoteData.updatedAt).getTime()
           : 0;
 
-        // Evita loop infinito: ignora snapshots que chegaram dentro de 2s do nosso próprio save.
+        // Evita loop infinito: ignora snapshots dentro de 2s do nosso próprio save.
         if (remoteTimestamp <= lastLocalUpdateRef.current + 2000) return;
 
         try {
@@ -69,18 +76,19 @@ export function useSyncedStorage<T>(key: string, initialValue: T, profileId: str
           console.warn('Aviso: erro ao processar atualização remota via Firestore', e);
         }
       },
+      // Correção 3: Erro no onSnapshot → notifica indicador global como "offline/falha"
       (error) => {
-        // Se não houver internet ou permissão, apenas avisa. O app não vai quebrar.
+        notifySyncing(false);
         console.warn(
-          `Aviso no onSnapshot para a chave ${key} (offline ou sem acesso?):`,
+          `Aviso no onSnapshot para a chave ${firestoreKey} (offline ou sem acesso?):`,
           error.message
         );
       }
     );
 
-    // Cleanup: garante que o listener anterior é cancelado antes de recriar
+    // Cleanup garantido: cancela o listener ao desmontar ou antes de recriar
     return () => unsubscribe();
-  }, [profileId, key]); // ← NÃO depende de lastLocalUpdateRef (é ref, não state)
+  }, [profileId, key, firestoreKey]); // firestoreKey é derivado de key/profileId, sem loops
 
   // 3. Função para salvar mudanças
   const setValue = (value: T | ((val: T) => T)) => {
@@ -99,13 +107,13 @@ export function useSyncedStorage<T>(key: string, initialValue: T, profileId: str
       // Notifica o indicador global que uma sincronização está em andamento
       notifySyncing(true);
 
-      // Envia assincronamente para o Firestore via camada de serviço
-      saveProfileData(profileId, key, valueToStore)
+      // Correção 2: Salva no Firestore usando a chave sem prefixo duplicado
+      saveProfileData(profileId, firestoreKey, valueToStore)
         .then(() => notifySyncing(false))
         .catch(e => {
           notifySyncing(false);
           console.warn(
-            `Aviso: falha ao salvar remotamente a chave ${key}. Estará sincronizado quando online.`,
+            `Aviso: falha ao salvar remotamente a chave ${firestoreKey}. Estará sincronizado quando online.`,
             e
           );
         });
