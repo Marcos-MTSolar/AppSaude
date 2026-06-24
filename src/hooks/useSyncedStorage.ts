@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, getDoc } from 'firebase/firestore';
+import { Capacitor } from '@capacitor/core';
 import { db } from '../firebase/config';
 import { saveProfileData } from '../firebase/syncService';
 import { notifySyncing } from './useFirestoreStatus';
@@ -46,43 +47,55 @@ export function useSyncedStorage<T>(key: string, initialValue: T, profileId: str
 
     const docRef = doc(db, 'usuarios', profileId, 'dados', firestoreKey);
 
-    // includeMetadataChanges: false → só dispara para dados confirmados no servidor,
-    // não para operações pendentes locais. Garante recepção do APK em tempo real na web.
+    // Função compartilhada de aplicar dado remoto
+    const applyRemote = (remoteData: any) => {
+      if (!remoteData) return;
+      const remoteValue = remoteData.data;
+      const remoteTimestamp = remoteData.updatedAt
+        ? new Date(remoteData.updatedAt).getTime()
+        : 0;
+
+      if (remoteTimestamp <= lastLocalUpdateRef.current + 2000) return;
+
+      try {
+        const remoteStr = JSON.stringify(remoteValue);
+        const localStr = window.localStorage.getItem(key);
+        if (remoteStr !== localStr) {
+          setStoredValue(remoteValue);
+          window.localStorage.setItem(key, remoteStr);
+        }
+      } catch (e) {
+        console.warn('Erro ao aplicar dado remoto:', e);
+      }
+    };
+
+    // No ambiente nativo (APK), usa polling pois o WebView
+    // pode bloquear o canal gRPC do onSnapshot
+    if (Capacitor.isNativePlatform()) {
+      const poll = async () => {
+        try {
+          const snap = await getDoc(docRef);
+          if (snap.exists()) applyRemote(snap.data());
+        } catch (e) {
+          console.warn(`[Polling] Erro ao buscar ${key}:`, e);
+        }
+      };
+
+      poll(); // busca imediata ao montar
+      const interval = setInterval(poll, 10000); // a cada 10s
+      return () => clearInterval(interval);
+    }
+
+    // Na web, usa onSnapshot para tempo real
     const unsubscribe = onSnapshot(
       docRef,
       { includeMetadataChanges: false },
       (docSnap) => {
-        if (!docSnap.exists()) return;
-
-        const remoteData = docSnap.data();
-        const remoteValue = remoteData.data;
-        const remoteTimestamp = remoteData.updatedAt
-          ? new Date(remoteData.updatedAt).getTime()
-          : 0;
-
-        // Evita loop infinito: ignora snapshots dentro de 2s do nosso próprio save.
-        if (remoteTimestamp <= lastLocalUpdateRef.current + 2000) return;
-
-        try {
-          const remoteStr = JSON.stringify(remoteValue);
-          const localStr = window.localStorage.getItem(key);
-
-          // Só aplica se houver mudança real
-          if (remoteStr !== localStr) {
-            setStoredValue(remoteValue);
-            window.localStorage.setItem(key, remoteStr);
-          }
-        } catch (e) {
-          console.warn('Aviso: erro ao processar atualização remota via Firestore', e);
-        }
+        if (docSnap.exists()) applyRemote(docSnap.data());
       },
-      // Correção 3: Erro no onSnapshot → notifica indicador global como "offline/falha"
       (error) => {
         notifySyncing(false);
-        console.warn(
-          `Aviso no onSnapshot para a chave ${firestoreKey} (offline ou sem acesso?):`,
-          error.message
-        );
+        console.warn(`[onSnapshot] Erro na chave ${key}:`, error.message);
       }
     );
 

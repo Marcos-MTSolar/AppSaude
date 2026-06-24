@@ -14,6 +14,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
+console.log('[Firebase] Inicializado. Plataforma nativa:', Capacitor.isNativePlatform());
+
 // Habilita persistência offline (cache via IndexedDB) apenas no app nativo
 if (Capacitor.isNativePlatform()) {
   enableIndexedDbPersistence(db).catch((err) => {
